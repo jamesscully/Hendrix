@@ -18,6 +18,46 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayoutMain"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:tabGravity="fill"
+            app:tabIconTint="#ffffff"
+            app:tabInlineLabel="true">
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tab_home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/ic_menu_home"
+                android:tag="R.id.nav_home"
+                android:text="@string/menu_home" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tab_artist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/ic_menu_artists"
+                android:tag="R.id.nav_artists"
+                android:text="@string/menu_artists" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tab_album"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/ic_menu_albums"
+                android:text="@string/menu_albums" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tab_songs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/ic_menu_song"
+                android:text="Songs" />
+
+        </com.google.android.material.tabs.TabLayout>
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <include layout="@layout/content_main" />
