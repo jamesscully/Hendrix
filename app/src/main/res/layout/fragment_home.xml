@@ -32,41 +32,63 @@
             android:text="Most Played"
             android:textSize="30sp"
             android:textStyle="bold" />
+
     </FrameLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/frameLayout">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/textView3"
             android:layout_width="match_parent"
-            android:layout_height="125dp"
-            android:orientation="vertical">
+            android:layout_height="40dp"
+            android:drawableRight="@drawable/ic_arrow_forward"
+            android:drawableTint="@android:color/secondary_text_dark"
+            android:gravity="center_vertical"
+            android:text="Your Favourites"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableRight="@drawable/ic_arrow_forward"
-                android:drawableTint="@android:color/secondary_text_dark"
-                android:text="Your Favourites"
-                android:textAlignment="viewStart"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbarStyle="outsideOverlay">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"></LinearLayout>
-        </LinearLayout>
+                android:orientation="horizontal">
+
+                <include
+                    layout="@layout/widget_musicdisplay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <include
+                    layout="@layout/widget_musicdisplay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    layout="@layout/widget_musicdisplay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    layout="@layout/widget_musicdisplay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </HorizontalScrollView>
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
