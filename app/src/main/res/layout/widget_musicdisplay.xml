@@ -4,6 +4,7 @@
     android:id="@+id/md_root_layout"
     android:layout_width="150dp"
     android:layout_height="200dp"
+    android:layout_marginLeft="5dp"
     android:layout_weight="0"
     android:background="@drawable/bdr_soft"
     android:minWidth="150dp"
@@ -41,10 +42,11 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <TextView
-                    android:id="@+id/textView4"
+                    android:id="@+id/md_songcount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="8dp"
@@ -54,10 +56,11 @@
                     android:textColor="@android:color/white" />
 
                 <TextView
-                    android:id="@+id/textView5"
+                    android:id="@+id/md_albumcount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_menu_albums_small"
+                    android:drawablePadding="3dp"
                     android:gravity="bottom"
                     android:text="5"
                     android:textColor="@android:color/white" />

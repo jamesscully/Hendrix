@@ -58,36 +58,16 @@
             android:textStyle="bold" />
 
         <HorizontalScrollView
+            android:id="@+id/scrl"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbarStyle="outsideOverlay">
 
             <LinearLayout
+                android:id="@+id/layout_favourites"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <include
-                    layout="@layout/widget_musicdisplay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <include
-                    layout="@layout/widget_musicdisplay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <include
-                    layout="@layout/widget_musicdisplay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <include
-                    layout="@layout/widget_musicdisplay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
+                android:orientation="horizontal"/>
         </HorizontalScrollView>
 
     </LinearLayout>

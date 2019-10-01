@@ -1,5 +1,8 @@
 package com.scullyapps.hendrix
 
+import android.Manifest
+import android.content.Intent
+import android.media.Image
 import android.os.Bundle
 import android.util.Log
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -14,11 +17,19 @@ import com.google.android.material.navigation.NavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.ActivityCompat
 import com.google.android.material.tabs.TabLayout
+import com.scullyapps.hendrix.services.DiscoverMusic
+import com.scullyapps.hendrix.ui.MusicDisplay
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.toast
+import org.w3c.dom.Text
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,6 +44,13 @@ class MainActivity : AppCompatActivity() {
 
         // set up our tabs
         configTabs()
+
+        // todo This should be moved to setup activity
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
+
+        Intent(this, DiscoverMusic::class.java).also { intent ->
+            startService(intent)
+        }
 
         // enable dark mode by default
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
@@ -51,6 +69,7 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
     }
 
     private fun configTabs() {
