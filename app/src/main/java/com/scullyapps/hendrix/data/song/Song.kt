@@ -60,6 +60,11 @@ class Song (file : File) {
 
 
 
+
+
+
+    // "static" methods
+
     companion object {
         fun isValidAudioExt(fileExt: String): Boolean {
             val acceptedFileTypes: Array<String> = arrayOf("mp3", "m4a")

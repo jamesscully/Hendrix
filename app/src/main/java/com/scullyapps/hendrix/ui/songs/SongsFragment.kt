@@ -1,7 +1,9 @@
 package com.scullyapps.hendrix.ui.songs
 
+import android.database.Cursor
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.scullyapps.hendrix.GlobalApp
 
 import com.scullyapps.hendrix.R
 import com.scullyapps.hendrix.data.repos.SongRepository
@@ -35,13 +38,43 @@ class SongsFragment : Fragment() {
 
         val songsLayout = root.findViewById<LinearLayout>(R.id.song_list_holder)
 
-        val timed = measureTimeMillis {
-            for (i in SongRepository.getAllSongs()) {
-                songsLayout.addView(SongDisplay(root.context, i))
-            }
+        val cResolver = GlobalApp.getAppContext().contentResolver
+
+        val cursor = cResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER)
+
+        if(cursor == null) {
+            return root
         }
 
-        Log.d(TAG, "Loading songs took ${timed / 1000}s")
+        cursor.moveToFirst()
+
+        while(cursor.moveToNext()) {
+
+            // if file is not music (ret. 0) then skip
+            if(cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC)) == 0)
+                continue
+
+            val id       = cursor.getInt    (cursor.getColumnIndex(MediaStore.Audio.Media._ID))
+
+            val title    = cursor.getString (cursor.getColumnIndex(MediaStore.Audio.Media.TITLE))
+            val album    = cursor.getString (cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM))
+            val artist   = cursor.getString (cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST))
+            val duration = cursor.getInt    (cursor.getColumnIndex(MediaStore.Audio.Media.DURATION))
+
+            
+
+            Log.d(TAG, "Song ${id}: ${artist} - ${title} ${album} ${duration}")
+        }
+
+
+
+//        val timed = measureTimeMillis {
+//            for (i in SongRepository.getAllSongs()) {
+//                songsLayout.addView(SongDisplay(root.context, i))
+//            }
+//        }
+
+//        Log.d(TAG, "Loading songs took ${timed / 1000}s")
 
         return root
     }
