@@ -27,20 +27,17 @@ class DiscoverMusic : IntentService("DiscoverMusicService") {
                 this.stopSelf()
             }
 
-
-
             val timeExec = measureTimeMillis {
 
-                File(Environment.getExternalStorageDirectory(), "Music").walkTopDown().forEach {
-
-                    // ensure we're only reading valid audio files
-                    if (it.isFile && Song.isValidAudioExt(it.extension) ) {
-                        val newSong = Song(it)
-
-                        println(newSong)
-
+                File(Environment.getExternalStorageDirectory(), "Music").walkTopDown()
+                    .filter {
+                        // ensure we're only reading files with audio extensions
+                        file -> Song.isValidAudioExt(file.extension) && file.isFile
                     }
-                }
+                    .forEach {
+                        val newSong = Song(it)
+                        println(newSong)
+                    }
             }
 
             Log.d(TAG, "Finished executing in ${timeExec / 1000F}s")
