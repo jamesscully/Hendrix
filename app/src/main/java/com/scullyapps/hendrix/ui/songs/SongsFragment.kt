@@ -61,7 +61,7 @@ class SongsFragment : Fragment() {
             val artist   = cursor.getString (cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST))
             val duration = cursor.getInt    (cursor.getColumnIndex(MediaStore.Audio.Media.DURATION))
 
-            
+
 
             Log.d(TAG, "Song ${id}: ${artist} - ${title} ${album} ${duration}")
         }

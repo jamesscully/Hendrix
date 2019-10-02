@@ -9,11 +9,11 @@ import java.io.File
 import java.lang.IllegalStateException
 import kotlin.system.measureTimeMillis
 
-class Song (file : File) {
+class Song (id : Int, path : String, title : String, artist : String, genre : String, duration : Int) {
     private val TAG: String = "Song"
 
 
-
+    var id     : Int    = 0
     var title  : String = "Unknown Track"
     var artist : String = "Unknown Artist"
     var genre  : String = "Unknown Genre"
@@ -21,47 +21,56 @@ class Song (file : File) {
 
     var artwork : Bitmap? = null
 
-
-
-
-
-    init {
-        require(isValidAudioExt(file.extension))
-
-        val mmr = MediaMetadataRetriever()
-
-        mmr.setDataSource(file.path)
-
-            try {
-                title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE) ?: file.nameWithoutExtension
-                artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)
-                duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-                genre = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_GENRE)
-
-                duration = millisToTimestamp(duration.toIntOrNull() ?: 0)
-
-                val artworkBytes : ByteArray = mmr.embeddedPicture
-                //artwork = BitmapFactory.decodeByteArray(artworkBytes, 0, artworkBytes.size)
-
-                // if no freetext genre is found, then it will be returned as, i.e. (00) for blues
-                if(genre.matches( Regex("^\\([0-9]*\\)\$") )) {
-                    genre = ID3GenreResolver.codeToString(genre.substring(1, genre.length - 1).toInt())
-                }
-
-            } catch (e: IllegalStateException) {
-
-            }
-    }
+    init { }
 
     override fun toString(): String {
         // The Weeknd - Starboy 03:15 HipHop
         return "$artist - $title $duration $genre $"
     }
 
+    class Builder(id : Int) {
 
+        var id : Int = id
 
+        var path : String = ""
 
+        var title  : String = "Unknown Track"
+        var artist : String = "Unknown Artist"
+        var genre  : String = "Unknown Genre"
+        var duration : Int  = 0
 
+        var artwork : Bitmap? = null
+
+        fun path(path : String) : Builder {
+            this.path = path
+            return this
+        }
+
+        fun title(title : String) : Builder {
+            this.title = title
+            return this
+        }
+
+        fun artist(artist : String) : Builder {
+            this.artist = artist
+            return this
+        }
+
+        fun genre(genre : String) : Builder {
+            this.genre = genre
+            return this
+        }
+
+        fun duration(duration : Int) : Builder {
+            this.duration = duration
+            return this
+        }
+
+        fun build() : Song {
+            return Song(id, path, title, artist, genre, duration)
+        }
+        
+    }
 
     // "static" methods
 
