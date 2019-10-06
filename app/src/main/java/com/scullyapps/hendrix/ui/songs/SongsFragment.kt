@@ -1,5 +1,9 @@
 package com.scullyapps.hendrix.ui.songs
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.database.Cursor
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -11,10 +15,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.scullyapps.hendrix.GlobalApp
 
 import com.scullyapps.hendrix.R
 import com.scullyapps.hendrix.data.repos.SongRepository
+import com.scullyapps.hendrix.data.song.Song
+import com.scullyapps.hendrix.services.DiscoverMusic
 import com.scullyapps.hendrix.ui.SongDisplay
 import kotlinx.android.synthetic.main.fragment_songs.*
 import kotlin.system.measureTimeMillis
@@ -38,43 +45,29 @@ class SongsFragment : Fragment() {
 
         val songsLayout = root.findViewById<LinearLayout>(R.id.song_list_holder)
 
-        val cResolver = GlobalApp.getAppContext().contentResolver
 
-        val cursor = cResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER)
 
-        if(cursor == null) {
-            return root
+        val updateUI = object: BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                Log.d(TAG, "Received data")
+
+                val songs = intent?.extras?.getSerializable("songs") as? ArrayList<Song>
+
+                if(songs == null) {
+                    return
+                }
+
+                for(i in songs) {
+                    songsLayout.addView(SongDisplay(root.context, i))
+                }
+            }
         }
 
-        cursor.moveToFirst()
+        LocalBroadcastManager.getInstance(root.context).registerReceiver(updateUI, IntentFilter("receive-songs"))
 
-        while(cursor.moveToNext()) {
-
-            // if file is not music (ret. 0) then skip
-            if(cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC)) == 0)
-                continue
-
-            val id       = cursor.getInt    (cursor.getColumnIndex(MediaStore.Audio.Media._ID))
-
-            val title    = cursor.getString (cursor.getColumnIndex(MediaStore.Audio.Media.TITLE))
-            val album    = cursor.getString (cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM))
-            val artist   = cursor.getString (cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST))
-            val duration = cursor.getInt    (cursor.getColumnIndex(MediaStore.Audio.Media.DURATION))
-
-
-
-            Log.d(TAG, "Song ${id}: ${artist} - ${title} ${album} ${duration}")
+        Intent(root.context, DiscoverMusic::class.java).also { intent ->
+            activity?.startService(intent)
         }
-
-
-
-//        val timed = measureTimeMillis {
-//            for (i in SongRepository.getAllSongs()) {
-//                songsLayout.addView(SongDisplay(root.context, i))
-//            }
-//        }
-
-//        Log.d(TAG, "Loading songs took ${timed / 1000}s")
 
         return root
     }
@@ -83,6 +76,8 @@ class SongsFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(SongsViewModel::class.java)
         // TODO: Use the ViewModel
+
+
 
 
 

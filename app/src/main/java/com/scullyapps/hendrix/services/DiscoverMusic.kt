@@ -6,9 +6,13 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.MediaMetadataRetriever
 import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import androidx.core.content.ContextCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.scullyapps.hendrix.GlobalApp
 import com.scullyapps.hendrix.data.song.Song
+import com.scullyapps.hendrix.ui.SongDisplay
 import java.io.File
 import kotlin.system.measureTimeMillis
 
@@ -18,33 +22,36 @@ class DiscoverMusic : IntentService("DiscoverMusicService") {
     private val TAG : String = "DiscoverMusicService"
 
     override fun onHandleIntent(intent: Intent?) {
-        try {
 
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-                // Permission is not granted
-                Log.d(TAG, "Could not get external storage permissions!")
-                this.stopSelf()
-            }
+        val cResolver = GlobalApp.getAppContext().contentResolver
 
-            val timeExec = measureTimeMillis {
+        val cursor = cResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER)
 
-                File(Environment.getExternalStorageDirectory(), "Music").walkTopDown()
-                    .filter {
-                        // ensure we're only reading files with audio extensions
-                        file -> Song.isValidAudioExt(file.extension) && file.isFile
-                    }
-                    .forEach {
-                        val newSong = Song(it)
-                        println(newSong)
-                    }
-            }
 
-            Log.d(TAG, "Finished executing in ${timeExec / 1000F}s")
+        val songs = ArrayList<Song>()
 
-        } catch (e: InterruptedException) {
-            Log.e(TAG, "Thread was interrupted!")
-            Thread.currentThread().interrupt()
+        if(cursor == null) {
+            return
         }
+
+        cursor.moveToFirst()
+
+        while(cursor.moveToNext()) {
+            // if file is not music (ret. 0) then skip
+            if(cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC)) == 0)
+                continue
+
+            songs.add(Song(cursor))
+        }
+
+        val intent = Intent()
+
+        intent.setAction("receive-songs")
+
+        intent.putExtra("songs", songs)
+
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+
+
     }
 }

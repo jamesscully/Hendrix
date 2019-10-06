@@ -18,13 +18,11 @@ class SongDisplay(context: Context, song: Song) : FrameLayout(context) {
         sd_song_name.setText(song.title)
         sd_artist_name.setText(song.artist)
 
-        sd_song_length.setText(song.duration)
+        sd_song_length.setText(song.getDuration())
 
-        if(song.artwork != null)
-            sd_song_art.setImageBitmap(song.artwork)
-
-
-
+        //if(song.artwork != null)
+        //    sd_song_art.setImageBitmap(song.artwork)
+        
     }
 
 }

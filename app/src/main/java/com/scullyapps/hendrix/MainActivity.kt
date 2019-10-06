@@ -48,12 +48,6 @@ class MainActivity : AppCompatActivity() {
         // todo This should be moved to setup activity
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
 
-        Intent(this, DiscoverMusic::class.java).also { intent ->
-            // startService(intent)
-        }
-
-
-
         // enable dark mode by default
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 

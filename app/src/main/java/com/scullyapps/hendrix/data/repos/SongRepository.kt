@@ -34,7 +34,7 @@ object SongRepository {
                     file -> Song.isValidAudioExt(file.extension) && file.isFile
             }
             .forEach {
-                songs.add(Song(it))
+                //songs.add(Song(it))
             }
     }
 
