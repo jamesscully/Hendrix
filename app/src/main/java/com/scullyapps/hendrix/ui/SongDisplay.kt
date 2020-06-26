@@ -22,7 +22,6 @@ class SongDisplay(context: Context, song: Song) : FrameLayout(context) {
 
         //if(song.artwork != null)
         //    sd_song_art.setImageBitmap(song.artwork)
-        
     }
 
 }

@@ -18,20 +18,22 @@ class Song : Serializable{
 
     private val TAG: String = "Song"
 
-    var id       : Int
-    var path     : String
-    var title    : String
-    var artist   : String
+    var id       : Int = -1
+    var path     : String = "null"
+    var title    : String = "Unknown"
+    var artist   : String = "Unknown"
 
-    var albumName : String
-    var albumID : Int
+    var albumName : String = "Unknown"
+    var albumID : Int = -1
 
     var genre    : String = "Unknown"
-    var duration : Int
+    var duration : Int = 0
 
 
 //    var artwork : Bitmap? = null
 
+    constructor() {
+    }
 
     constructor(cursor : Cursor) {
         id        = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media._ID))

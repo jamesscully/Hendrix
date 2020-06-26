@@ -17,6 +17,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.scullyapps.hendrix.GlobalApp
+import com.scullyapps.hendrix.PlayActivity
 
 import com.scullyapps.hendrix.R
 import com.scullyapps.hendrix.data.repos.SongRepository
@@ -40,12 +41,8 @@ class SongsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         val root = inflater.inflate(R.layout.fragment_songs, container, false)
-
         val songsLayout = root.findViewById<LinearLayout>(R.id.song_list_holder)
-
-
 
         val updateUI = object: BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
@@ -58,7 +55,19 @@ class SongsFragment : Fragment() {
                 }
 
                 for(i in songs) {
-                    songsLayout.addView(SongDisplay(root.context, i))
+                    val add = SongDisplay(root.context, i)
+
+                    val intent = Intent()
+                    val bundle = Bundle()
+
+                    intent.setClass(inflater.context, PlayActivity::class.java)
+                    bundle.putSerializable("song", i)
+
+                    add.setOnClickListener {_ ->
+                        startActivity(intent, bundle)
+                    }
+
+                    songsLayout.addView(add)
                 }
             }
         }
