@@ -19,17 +19,20 @@
 
     <ImageView
         android:id="@+id/img_play_artwork"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="128dp"
+        android:layout_width="256dp"
+        android:layout_height="256dp"
+        android:background="#7A7A7A"
+        app:layout_constraintBottom_toTopOf="@+id/tableLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:srcCompat="@drawable/ic_unknown_art" />
 
     <TableLayout
+        android:id="@+id/tableLayout"
         android:layout_width="0dp"
         android:layout_height="240dp"
+        android:background="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -42,20 +45,12 @@
             android:paddingBottom="8dp">
 
             <TextView
-                android:id="@+id/txt_play_name"
+                android:id="@+id/txt_play_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingRight="8dp"
-                android:text="Artist Name"
-                android:textAlignment="center" />
-
-            <TextView
-                android:id="@+id/txt_play_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="8dp"
-                android:text="Song Title"
-                android:textAlignment="center" />
+                android:text="Song Info"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF" />
         </TableRow>
 
         <TableRow
@@ -70,7 +65,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Time Left"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textColor="#FFFFFF" />
         </TableRow>
 
         <TableRow
@@ -84,20 +80,27 @@
                 android:id="@+id/btn_play_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Go Back" />
+                android:background="#333333"
+                android:text="Go Back"
+                android:textColor="#FFFFFF" />
 
             <Button
                 android:id="@+id/btn_play"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
                 android:background="@drawable/bdr_soft"
-                android:text="Play" />
+                android:text="Play"
+                android:textColor="#FFFFFF" />
 
             <Button
                 android:id="@+id/btn_play_next"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Go Forw" />
+                android:background="#333333"
+                android:text="Go Forw"
+                android:textColor="#FFFFFF" />
         </TableRow>
 
         <TableRow
@@ -105,25 +108,33 @@
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
             android:paddingTop="8dp"
-            android:paddingBottom="8dp" >
+            android:paddingBottom="8dp">
 
             <Button
                 android:id="@+id/btn_play_prevbookmark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="-" />
+                android:background="#333333"
+                android:text="-"
+                android:textColor="#FFFFFF" />
 
             <Button
                 android:id="@+id/btn_play_bookmark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="BKMRK" />
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:background="#333333"
+                android:text="BKMRK"
+                android:textColor="#FFFFFF" />
 
             <Button
                 android:id="@+id/btn_play_nextbookmark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="+" />
+                android:background="#333333"
+                android:text="+"
+                android:textColor="#FFFFFF" />
         </TableRow>
     </TableLayout>
 

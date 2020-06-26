@@ -34,8 +34,6 @@ class HomeFragment : Fragment() {
         favs.addView(MusicDisplay(root.context, ""))
         favs.addView(MusicDisplay(root.context, "Test"))
 
-
-
         return root
     }
 }

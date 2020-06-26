@@ -15,10 +15,10 @@ class SongDisplay(context: Context, song: Song) : FrameLayout(context) {
 
     init {
         LayoutInflater.from(context).inflate(R.layout.widget_songdisplay, this, true)
-        sd_song_name.setText(song.title)
-        sd_artist_name.setText(song.artist)
 
-        sd_song_length.setText(song.getDuration())
+        sd_song_name.text = song.title
+        sd_artist_name.text = song.artist
+        sd_song_length.text = song.getDuration()
 
         //if(song.artwork != null)
         //    sd_song_art.setImageBitmap(song.artwork)
