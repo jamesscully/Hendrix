@@ -63,8 +63,10 @@ class SongsFragment : Fragment() {
                     intent.setClass(inflater.context, PlayActivity::class.java)
                     bundle.putSerializable("song", i)
 
+                    intent.putExtras(bundle)
+
                     add.setOnClickListener {_ ->
-                        startActivity(intent, bundle)
+                        startActivity(intent)
                     }
 
                     songsLayout.addView(add)

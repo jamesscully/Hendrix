@@ -4,12 +4,14 @@ import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
+import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
 import com.scullyapps.hendrix.data.ID3GenreResolver
 import java.io.File
 import java.io.Serializable
 import java.lang.IllegalStateException
+import java.net.URI
 import kotlin.system.measureTimeMillis
 
 
@@ -20,6 +22,7 @@ class Song : Serializable{
 
     var id       : Int = -1
     var path     : String = "null"
+
     var title    : String = "Unknown"
     var artist   : String = "Unknown"
 
@@ -55,10 +58,14 @@ class Song : Serializable{
         return millisToTimestamp(duration)
     }
 
+    fun getURI() : Uri? {
+        return Uri.fromFile(File(path))
+    }
+
     override fun toString(): String {
         // The Weeknd - Starboy 03:15 HipHop
 
-        return "$artist - $title $duration $genre $"
+        return "$artist - $title \n Duration (ms): $duration\n Path: $path\n$"
     }
 
     // "static" methods
