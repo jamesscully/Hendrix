@@ -25,7 +25,7 @@ class SoundPlayer {
     private val playedSongs : Stack<Song> = Stack()
     private val queuedSongs : Queue<Song> = LinkedList()
 
-    private var song = Song()
+    var song = Song()
 
     var state = PlayerState.STOPPED
 
@@ -34,6 +34,7 @@ class SoundPlayer {
     constructor(s : Song) {
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
         player = genMediaPlayer(s)
+        song = s
     }
 
     fun play() {

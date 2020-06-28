@@ -54,6 +54,19 @@ class PlayActivity : AppCompatActivity() {
                 btn_play.text = "Paus"
                 player.play()
             }
+
+            updateUI()
         }
+    }
+
+    // Updates control UI from player (timeleft, artistname, etc)
+    fun updateUI() {
+        val s = player.song
+
+        val currentTime = Song.millisToTimestamp(player.player.currentPosition)
+        val durationTime = Song.millisToTimestamp(player.player.duration)
+
+        txt_play_info.text = "${s.artist} - ${s.title}"
+        txt_play_timeleft.text = "$currentTime / $durationTime"
     }
 }
