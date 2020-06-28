@@ -28,6 +28,14 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
         app:srcCompat="@drawable/ic_unknown_art" />
 
+    <com.scullyapps.hendrix.ui.PlaybarDisplay
+        android:id="@+id/playbarDisplay"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
@@ -78,9 +86,9 @@
                 android:id="@+id/btn_play_back"
                 android:layout_width="75dp"
                 android:layout_height="wrap_content"
-                android:background="#333333"
+                android:background="@drawable/bdr_soft"
                 android:maxLines="1"
-                android:text="Go Back"
+                android:text="BK"
                 android:textColor="#FFFFFF" />
 
             <Button
@@ -98,9 +106,9 @@
                 android:id="@+id/btn_play_next"
                 android:layout_width="75dp"
                 android:layout_height="wrap_content"
-                android:background="#333333"
+                android:background="@drawable/bdr_soft"
                 android:maxLines="1"
-                android:text="Go Forw"
+                android:text="FW"
                 android:textColor="#FFFFFF" />
 
         </LinearLayout>
@@ -114,9 +122,9 @@
                 android:id="@+id/btn_play_prevbookmark"
                 android:layout_width="75dp"
                 android:layout_height="wrap_content"
-                android:background="#333333"
+                android:background="@drawable/bdr_soft"
                 android:maxLines="1"
-                android:text="-"
+                android:text="BK"
                 android:textColor="#FFFFFF" />
 
             <Button
@@ -125,7 +133,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginEnd="24dp"
-                android:background="#333333"
+                android:background="@drawable/bdr_soft"
                 android:maxLines="1"
                 android:text="BKMRK"
                 android:textColor="#FFFFFF" />
@@ -134,9 +142,9 @@
                 android:id="@+id/btn_play_nextbookmark"
                 android:layout_width="75dp"
                 android:layout_height="wrap_content"
-                android:background="#333333"
+                android:background="@drawable/bdr_soft"
                 android:maxLines="1"
-                android:text="+"
+                android:text="FW"
                 android:textColor="#FFFFFF" />
 
         </LinearLayout>

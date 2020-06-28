@@ -9,6 +9,7 @@ import com.scullyapps.hendrix.data.song.Song
 import com.scullyapps.hendrix.ui.sound.PlayerState
 import com.scullyapps.hendrix.ui.sound.SoundPlayer
 import kotlinx.android.synthetic.main.activity_play.*
+import kotlin.concurrent.fixedRateTimer
 
 class PlayActivity : AppCompatActivity() {
 
@@ -24,6 +25,21 @@ class PlayActivity : AppCompatActivity() {
         setContentView(R.layout.activity_play)
         setSupportActionBar(findViewById(R.id.toolbar))
 
+
+        // each time in milliseconds the task should be fired
+        // lower = more updated; more calls
+        // higher = less updated, less calls
+        val TICK_TIME : Long = 1000
+
+        // this runs a timer that updates both the progress bar and timeleft every second.
+        fixedRateTimer("updateprog", true, 0, TICK_TIME) {
+            this@PlayActivity.runOnUiThread {
+                if(player.state == PlayerState.PLAYING) {
+                    setTimeLeft(player.player.currentPosition)
+                }
+            }
+        }
+
         // Bundle should contain song
         if (intent.extras != null) {
             if(intent.extras.containsKey("song")) {
@@ -36,6 +52,7 @@ class PlayActivity : AppCompatActivity() {
         }
 
         setupButtons()
+        updateUI()
     }
 
     fun setupButtons() {
@@ -63,10 +80,13 @@ class PlayActivity : AppCompatActivity() {
     fun updateUI() {
         val s = player.song
 
-        val currentTime = Song.millisToTimestamp(player.player.currentPosition)
-        val durationTime = Song.millisToTimestamp(player.player.duration)
-
         txt_play_info.text = "${s.artist} - ${s.title}"
+        setTimeLeft(player.player.currentPosition)
+    }
+
+    private fun setTimeLeft(t : Int) {
+        val currentTime = Song.millisToTimestamp(t)
+        val durationTime = Song.millisToTimestamp(player.player.duration)
         txt_play_timeleft.text = "$currentTime / $durationTime"
     }
 }
