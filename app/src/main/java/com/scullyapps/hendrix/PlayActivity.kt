@@ -6,6 +6,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import com.scullyapps.hendrix.data.song.Song
+import com.scullyapps.hendrix.ui.PlaybarDisplay
 import com.scullyapps.hendrix.ui.sound.PlayerState
 import com.scullyapps.hendrix.ui.sound.SoundPlayer
 import kotlinx.android.synthetic.main.activity_play.*
@@ -19,16 +20,13 @@ class PlayActivity : AppCompatActivity() {
     var song : Song = Song()
 
     lateinit var player : SoundPlayer
+    lateinit var playbar: PlaybarDisplay
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play)
         setSupportActionBar(findViewById(R.id.toolbar))
 
-
-        // each time in milliseconds the task should be fired
-        // lower = more updated; more calls
-        // higher = less updated, less calls
         val TICK_TIME : Long = 1000
 
         // this runs a timer that updates both the progress bar and timeleft every second.
@@ -50,6 +48,8 @@ class PlayActivity : AppCompatActivity() {
         } else {
             Log.e(TAG, "Player was started with no bundle; no songs!")
         }
+
+        playbar = playbarDisplay
 
         setupButtons()
         updateUI()
@@ -82,6 +82,11 @@ class PlayActivity : AppCompatActivity() {
 
         txt_play_info.text = "${s.artist} - ${s.title}"
         setTimeLeft(player.player.currentPosition)
+
+        playbar.time = player.player.currentPosition
+        playbar.duration = player.player.duration
+
+        playbar.plsdraw()
     }
 
     private fun setTimeLeft(t : Int) {

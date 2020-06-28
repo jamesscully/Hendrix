@@ -3,9 +3,11 @@ package com.scullyapps.hendrix.ui
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
+import androidx.core.math.MathUtils
 
-class PlaybarDisplay(context : Context) : View(context) {
+class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr) {
     private val TAG: String = "PlaybarDisplay";
 
     private var bitmap : Bitmap? = null
@@ -14,17 +16,37 @@ class PlaybarDisplay(context : Context) : View(context) {
     private var path : Path = Path()
     private var paint : Paint = Paint()
 
+    private var playedPaint : Paint = Paint()
 
-    constructor(context: Context, attr: AttributeSet) : this(context) {
+    // current time on song
+    var time : Int = 1
+    // duration of song
+    var duration : Int = 1
 
-    }
+    // gives percentage of way through with up/low bounds
+    var progress : Float = 0.0f
+        get() {
+            if(duration == 0 || time == 0) {
+                Log.e(TAG, "Avoiding div by 0 in progress")
+                return 0F
+            }
+            else {
+                val prog = (time.toFloat() / duration.toFloat())
+
+                return MathUtils.clamp(prog, 0.0f, 1.0f)
+            }
+        }
 
     init {
-        paint.style = Paint.Style.STROKE;
+        paint.style = Paint.Style.FILL;
         paint.strokeJoin = Paint.Join.ROUND;
         paint.strokeWidth = 20.0f;
         paint.strokeCap = Paint.Cap.ROUND;
         paint.setARGB(255,0,0,0);
+    }
+
+    fun plsdraw() {
+        invalidate()
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -33,7 +55,9 @@ class PlaybarDisplay(context : Context) : View(context) {
     }
 
     override fun onDraw(canvas: Canvas?) {
+        Log.d(TAG, "Drawing playbar:\nWidth/Height: $width,$height\nTime/Duration: ($time,$duration)\nProgress: $progress, ${width.toFloat() * progress}\n")
         canvas?.drawColor(Color.YELLOW)
+        canvas?.drawRect(0F, height.toFloat(), width.toFloat() * progress, 0F, paint)
     }
 
 }

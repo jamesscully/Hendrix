@@ -6,6 +6,7 @@ import android.media.MediaPlayer
 import android.util.Log
 import com.scullyapps.hendrix.GlobalApp
 import com.scullyapps.hendrix.data.song.Song
+import com.scullyapps.hendrix.ui.PlaybarDisplay
 import kotlinx.io.IOException
 import java.io.File
 import java.io.FileDescriptor
