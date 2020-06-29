@@ -3,6 +3,7 @@ package com.scullyapps.hendrix
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.scullyapps.hendrix.models.song.Bookmark
 import com.scullyapps.hendrix.models.song.Song
 import com.scullyapps.hendrix.ui.PlaybarDisplay
 import com.scullyapps.hendrix.ui.sound.PlayerState
@@ -73,6 +74,20 @@ class PlayActivity : AppCompatActivity() {
             }
 
             updateUI()
+        }
+
+
+
+        btn_play_bookmark.setOnClickListener {
+
+            val time = player.player.currentPosition
+            val hash = player.song.calculateMD5()
+
+            val caption = "This is a test caption"
+
+            val bookmark = Bookmark()
+
+
         }
     }
 
