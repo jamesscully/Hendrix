@@ -2,10 +2,8 @@ package com.scullyapps.hendrix
 
 import android.os.Bundle
 import android.util.Log
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
-import com.scullyapps.hendrix.data.song.Song
+import com.scullyapps.hendrix.models.song.Song
 import com.scullyapps.hendrix.ui.PlaybarDisplay
 import com.scullyapps.hendrix.ui.sound.PlayerState
 import com.scullyapps.hendrix.ui.sound.SoundPlayer

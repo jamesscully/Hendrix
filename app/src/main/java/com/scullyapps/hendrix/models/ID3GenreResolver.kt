@@ -1,4 +1,4 @@
-package com.scullyapps.hendrix.data
+package com.scullyapps.hendrix.models
 
 import android.util.Log
 

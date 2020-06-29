@@ -1,20 +1,11 @@
 package com.scullyapps.hendrix.services
 
-import android.Manifest
 import android.app.IntentService
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.media.MediaMetadataRetriever
-import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
-import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.scullyapps.hendrix.GlobalApp
-import com.scullyapps.hendrix.data.song.Song
-import com.scullyapps.hendrix.ui.SongDisplay
-import java.io.File
-import kotlin.system.measureTimeMillis
+import com.scullyapps.hendrix.models.song.Song
 
 
 class DiscoverMusic : IntentService("DiscoverMusicService") {

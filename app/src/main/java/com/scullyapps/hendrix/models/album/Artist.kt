@@ -1,4 +1,4 @@
-package com.scullyapps.hendrix.data.album
+package com.scullyapps.hendrix.models.album
 
 import java.io.File
 

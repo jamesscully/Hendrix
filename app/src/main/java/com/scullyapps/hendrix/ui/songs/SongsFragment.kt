@@ -4,28 +4,21 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.database.Cursor
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.scullyapps.hendrix.GlobalApp
 import com.scullyapps.hendrix.PlayActivity
 
 import com.scullyapps.hendrix.R
-import com.scullyapps.hendrix.data.repos.SongRepository
-import com.scullyapps.hendrix.data.song.Song
+import com.scullyapps.hendrix.models.song.Song
 import com.scullyapps.hendrix.services.DiscoverMusic
 import com.scullyapps.hendrix.ui.SongDisplay
-import kotlinx.android.synthetic.main.fragment_songs.*
-import kotlin.system.measureTimeMillis
 
 class SongsFragment : Fragment() {
 

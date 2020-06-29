@@ -1,12 +1,10 @@
 package com.scullyapps.hendrix.ui
 
 import android.content.Context
-import android.graphics.drawable.BitmapDrawable
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import com.scullyapps.hendrix.R
-import com.scullyapps.hendrix.data.song.Song
-import kotlinx.android.synthetic.main.widget_musicdisplay.view.*
+import com.scullyapps.hendrix.models.song.Song
 import kotlinx.android.synthetic.main.widget_songdisplay.view.*
 
 class SongDisplay(context: Context, song: Song) : FrameLayout(context) {

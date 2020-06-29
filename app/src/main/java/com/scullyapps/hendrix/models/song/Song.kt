@@ -1,19 +1,11 @@
-package com.scullyapps.hendrix.data.song
+package com.scullyapps.hendrix.models.song
 
 import android.database.Cursor
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.provider.MediaStore
-import android.util.Log
 import com.scullyapps.hendrix.MD5
-import com.scullyapps.hendrix.data.ID3GenreResolver
 import java.io.File
 import java.io.Serializable
-import java.lang.IllegalStateException
-import java.net.URI
-import kotlin.system.measureTimeMillis
 
 
 @kotlinx.serialization.Serializable
@@ -69,8 +61,14 @@ class Song : Serializable{
         return "$artist - $title \n Duration (ms): $duration\n Path: $path\n$"
     }
 
+
+    // hash functions
     fun calculateMD5() : String {
         return MD5.calculateMD5(File(path))
+    }
+
+    fun compareMD5(md5 : String) : Boolean {
+        return md5 == calculateMD5()
     }
 
     // "static" methods

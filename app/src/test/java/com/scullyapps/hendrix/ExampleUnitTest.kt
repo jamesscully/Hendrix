@@ -1,6 +1,6 @@
 package com.scullyapps.hendrix
 
-import com.scullyapps.hendrix.data.song.Song
+import com.scullyapps.hendrix.models.song.Song
 import org.junit.Test
 
 import org.junit.Assert.*

@@ -1,4 +1,4 @@
-package com.scullyapps.hendrix.data.artist
+package com.scullyapps.hendrix.models.artist
 
 
 class Artist {

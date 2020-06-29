@@ -1,15 +1,10 @@
 package com.scullyapps.hendrix.ui.sound
 
-import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.util.Log
-import com.scullyapps.hendrix.GlobalApp
-import com.scullyapps.hendrix.data.song.Song
-import com.scullyapps.hendrix.ui.PlaybarDisplay
+import com.scullyapps.hendrix.models.song.Song
 import kotlinx.io.IOException
-import java.io.File
-import java.io.FileDescriptor
 import java.lang.IllegalArgumentException
 import java.util.*
 

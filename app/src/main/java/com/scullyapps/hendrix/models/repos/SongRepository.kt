@@ -1,4 +1,4 @@
-package com.scullyapps.hendrix.data.repos
+package com.scullyapps.hendrix.models.repos
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -7,7 +7,7 @@ import android.os.Environment
 import android.util.Log
 import androidx.core.content.ContextCompat
 import com.scullyapps.hendrix.GlobalApp
-import com.scullyapps.hendrix.data.song.Song
+import com.scullyapps.hendrix.models.song.Song
 import java.io.File
 
 
