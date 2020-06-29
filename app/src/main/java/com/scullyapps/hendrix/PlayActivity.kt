@@ -51,6 +51,8 @@ class PlayActivity : AppCompatActivity() {
 
         playbar = playbarDisplay
 
+        Log.d(TAG,"Song has MD5 sum: " + song.calculateMD5())
+
         setupButtons()
         updateUI()
     }

@@ -27,12 +27,10 @@ class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr
     var progress : Float = 0.0f
         get() {
             if(duration == 0 || time == 0) {
-                Log.e(TAG, "Avoiding div by 0 in progress")
                 return 0F
             }
             else {
                 val prog = (time.toFloat() / duration.toFloat())
-
                 return MathUtils.clamp(prog, 0.0f, 1.0f)
             }
         }
@@ -57,7 +55,9 @@ class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr
     override fun onDraw(canvas: Canvas?) {
         Log.d(TAG, "Drawing playbar:\nWidth/Height: $width,$height\nTime/Duration: ($time,$duration)\nProgress: $progress, ${width.toFloat() * progress}\n")
         canvas?.drawColor(Color.YELLOW)
-        canvas?.drawRect(0F, height.toFloat(), width.toFloat() * progress, 0F, paint)
+
+        // set width to how far we've progressed in song
+        canvas?.drawRect(0F, height.toFloat() / 2, width.toFloat() * progress, 0F, paint)
     }
 
 }
