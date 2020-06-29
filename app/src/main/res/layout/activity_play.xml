@@ -22,7 +22,7 @@
         android:layout_width="256dp"
         android:layout_height="256dp"
         android:background="#7A7A7A"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintBottom_toTopOf="@+id/playbarDisplay"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
@@ -31,7 +31,7 @@
     <com.scullyapps.hendrix.ui.PlaybarDisplay
         android:id="@+id/playbarDisplay"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="100dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -56,11 +56,11 @@
 
             <TextView
                 android:id="@+id/txt_play_info"
-                android:layout_width="250dp"
-                android:layout_height="50dp"
-                android:layout_marginBottom="8dp"
+                android:layout_width="350dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="4dp"
                 android:gravity="center_vertical"
-                android:maxLines="3"
+                android:maxLines="2"
                 android:text="This is a really long song name that will be used to determine how many lines that should be used."
                 android:textAlignment="center"
                 android:textColor="#FFFFFF"
@@ -77,71 +77,72 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="300dp"
+            android:layout_height="60dp"
             android:layout_marginTop="16dp"
+            android:gravity="center_horizontal"
             android:orientation="horizontal">
 
-            <Button
+            <ImageView
                 android:id="@+id/btn_play_back"
                 android:layout_width="75dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:background="@drawable/bdr_soft"
-                android:maxLines="1"
-                android:text="BK"
-                android:textColor="#FFFFFF" />
+                app:srcCompat="@drawable/ic_play_previous" />
 
-            <Button
+            <ImageView
                 android:id="@+id/btn_play"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
+                android:layout_width="75dp"
+                android:layout_height="match_parent"
                 android:layout_marginStart="24dp"
                 android:layout_marginEnd="24dp"
                 android:background="@drawable/bdr_soft"
-                android:maxLines="1"
-                android:text="Play"
-                android:textColor="#FFFFFF" />
+                app:srcCompat="@drawable/ic_play" />
 
-            <Button
+            <ImageView
                 android:id="@+id/btn_play_next"
                 android:layout_width="75dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:background="@drawable/bdr_soft"
-                android:maxLines="1"
-                android:text="FW"
-                android:textColor="#FFFFFF" />
+                app:srcCompat="@drawable/ic_play_next" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="16dp"
+            android:gravity="center_horizontal">
 
             <Button
                 android:id="@+id/btn_play_prevbookmark"
                 android:layout_width="75dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@drawable/bdr_soft"
                 android:maxLines="1"
                 android:text="BK"
                 android:textColor="#FFFFFF" />
 
-            <Button
+            <ImageView
                 android:id="@+id/btn_play_bookmark"
                 android:layout_width="100dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginStart="24dp"
                 android:layout_marginEnd="24dp"
                 android:background="@drawable/bdr_soft"
-                android:maxLines="1"
-                android:text="BKMRK"
-                android:textColor="#FFFFFF" />
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/ic_bookmark" />
 
             <Button
                 android:id="@+id/btn_play_nextbookmark"
                 android:layout_width="75dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@drawable/bdr_soft"
                 android:maxLines="1"
                 android:text="FW"

@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import androidx.core.math.MathUtils
+import com.scullyapps.hendrix.models.song.Bookmark
 
 class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr) {
     private val TAG: String = "PlaybarDisplay";
@@ -14,9 +15,16 @@ class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr
     private var canvas : Canvas? = null
 
     private var path : Path = Path()
-    private var paint : Paint = Paint()
+
 
     private var playedPaint : Paint = Paint()
+    private var bookmarkPaint: Paint = Paint()
+    private var backgroundPaint: Paint = Paint()
+
+
+
+
+    private var bookmarks : ArrayList<Bookmark> = ArrayList()
 
     // current time on song
     var time : Int = 1
@@ -36,11 +44,41 @@ class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr
         }
 
     init {
-        paint.style = Paint.Style.FILL;
-        paint.strokeJoin = Paint.Join.ROUND;
-        paint.strokeWidth = 20.0f;
-        paint.strokeCap = Paint.Cap.ROUND;
-        paint.setARGB(255,0,0,0);
+        setPaintBrushes()
+    }
+
+    private fun setPaintBrushes() {
+        playedPaint.style = Paint.Style.FILL;
+        playedPaint.setARGB(255,20,6,54);
+
+        backgroundPaint.setARGB(255, 74, 54, 107)
+    }
+
+    fun setBookmarks(marks : ArrayList<Bookmark>) {
+        bookmarks = marks
+    }
+
+    fun drawAllBookmarks() {
+        for(x in bookmarks) {
+            drawBookmark(x)
+        }
+    }
+
+    fun inv() {
+
+    }
+
+    fun drawBookmark(b : Bookmark) {
+
+        // provides x position on playbar for bookmark
+        val x = (b.timestamp.toFloat() / duration.toFloat()) * width
+        val w : Int = 5
+
+        Log.d(TAG, "Drawing Bookmark: $b x: $x)")
+
+        canvas?.drawRect(x - (w / 2), 0F, x + (w / 2), height.toFloat() / 2, bookmarkPaint)
+
+//        canvas?.drawRect(0F, 0F, width.toFloat(), height.toFloat(), paint)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -49,11 +87,15 @@ class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr
     }
 
     override fun onDraw(canvas: Canvas?) {
-        Log.d(TAG, "Drawing playbar:\nWidth/Height: $width,$height\nTime/Duration: ($time,$duration)\nProgress: $progress, ${width.toFloat() * progress}\n")
-        canvas?.drawColor(Color.YELLOW)
+        this.canvas = canvas
+
+        // draw background
+        canvas?.drawRect(0F, 0F, width.toFloat(), height.toFloat(), backgroundPaint)
 
         // set width to how far we've progressed in song
-        canvas?.drawRect(0F, (height.toFloat() / 2), width.toFloat() * progress, height.toFloat(), paint)
+        canvas?.drawRect(0F, (height.toFloat() / 2), width.toFloat() * progress, height.toFloat(), playedPaint)
+
+        drawAllBookmarks()
     }
 
 }

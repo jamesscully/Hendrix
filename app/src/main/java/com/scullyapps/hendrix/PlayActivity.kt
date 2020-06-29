@@ -3,6 +3,7 @@ package com.scullyapps.hendrix
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.scullyapps.hendrix.data.BookmarkDB
 import com.scullyapps.hendrix.models.song.Bookmark
 import com.scullyapps.hendrix.models.song.Song
@@ -46,17 +47,16 @@ class PlayActivity : AppCompatActivity() {
                 Log.d(TAG, "Retrieved Song: $song")
                 player = SoundPlayer(song)
             }
-
-            val bookmarks = BookmarkDB.getBookmarks(song)
-
-            print(bookmarks)
-
         } else {
             Log.e(TAG, "Player was started with no bundle; no songs!")
             finishActivity(0)
         }
 
         playbar = playbarDisplay
+
+        val bookmarks : ArrayList<Bookmark> = BookmarkDB.getBookmarks(song)
+
+        playbar.setBookmarks(bookmarks)
 
         Log.d(TAG,"Song has MD5 sum: " + song.calculateMD5())
 
@@ -74,10 +74,10 @@ class PlayActivity : AppCompatActivity() {
 
             // toggle; use small text (to preserve layout for initial testing)
             if(player.state == PlayerState.PLAYING) {
-                btn_play.text = "Play"
+                btn_play.setImageDrawable(ContextCompat.getDrawable(GlobalApp.getAppContext(), R.drawable.ic_play))
                 player.pause()
             } else {
-                btn_play.text = "Paus"
+                btn_play.setImageDrawable(ContextCompat.getDrawable(GlobalApp.getAppContext(), R.drawable.ic_pause))
                 player.play()
             }
 

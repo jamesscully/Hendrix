@@ -102,8 +102,8 @@ object BookmarkDB : SQLiteOpenHelper(GlobalApp.getAppContext(), "BookmarkDB", nu
         return bookmarks
     }
 
-    fun getBookmarks(s: Song) {
-        getBookmarks(s.calculateMD5())
+    fun getBookmarks(s: Song) : ArrayList<Bookmark> {
+        return getBookmarks(s.calculateMD5())
     }
 
     fun bookmarkCount(s: Song) {
