@@ -43,10 +43,6 @@ class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr
         paint.setARGB(255,0,0,0);
     }
 
-    fun plsdraw() {
-        invalidate()
-    }
-
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         bitmap = Bitmap.createBitmap(Math.max(w,h), Math.max(w,h), Bitmap.Config.ARGB_8888)
         canvas = Canvas(bitmap)
@@ -57,7 +53,7 @@ class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr
         canvas?.drawColor(Color.YELLOW)
 
         // set width to how far we've progressed in song
-        canvas?.drawRect(0F, height.toFloat() / 2, width.toFloat() * progress, 0F, paint)
+        canvas?.drawRect(0F, (height.toFloat() / 2), width.toFloat() * progress, height.toFloat(), paint)
     }
 
 }

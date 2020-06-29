@@ -3,6 +3,7 @@ package com.scullyapps.hendrix
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.scullyapps.hendrix.data.BookmarkDB
 import com.scullyapps.hendrix.models.song.Bookmark
 import com.scullyapps.hendrix.models.song.Song
 import com.scullyapps.hendrix.ui.PlaybarDisplay
@@ -33,6 +34,7 @@ class PlayActivity : AppCompatActivity() {
             this@PlayActivity.runOnUiThread {
                 if(player.state == PlayerState.PLAYING) {
                     setTimeLeft(player.player.currentPosition)
+                    playbar.invalidate()
                 }
             }
         }
@@ -44,8 +46,14 @@ class PlayActivity : AppCompatActivity() {
                 Log.d(TAG, "Retrieved Song: $song")
                 player = SoundPlayer(song)
             }
+
+            val bookmarks = BookmarkDB.getBookmarks(song)
+
+            print(bookmarks)
+
         } else {
             Log.e(TAG, "Player was started with no bundle; no songs!")
+            finishActivity(0)
         }
 
         playbar = playbarDisplay
@@ -79,13 +87,13 @@ class PlayActivity : AppCompatActivity() {
 
 
         btn_play_bookmark.setOnClickListener {
-
             val time = player.player.currentPosition
             val hash = player.song.calculateMD5()
-
             val caption = "This is a test caption"
 
-            val bookmark = Bookmark()
+            val bookmark = Bookmark(hash, time, caption)
+
+            BookmarkDB.createBookmark(bookmark)
 
 
         }
@@ -101,7 +109,7 @@ class PlayActivity : AppCompatActivity() {
         playbar.time = player.player.currentPosition
         playbar.duration = player.player.duration
 
-        playbar.plsdraw()
+        playbar.invalidate()
     }
 
     private fun setTimeLeft(t : Int) {
