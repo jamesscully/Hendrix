@@ -23,22 +23,11 @@ class PlayActivity : AppCompatActivity() {
     lateinit var player : SoundPlayer
     lateinit var playbar: PlaybarDisplay
 
+    // TODO move all data to ViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play)
         setSupportActionBar(findViewById(R.id.toolbar))
-
-        val TICK_TIME : Long = 1000
-
-        // this runs a timer that updates both the progress bar and timeleft every second.
-        fixedRateTimer("updateprog", true, 0, TICK_TIME) {
-            this@PlayActivity.runOnUiThread {
-                if(player.state == PlayerState.PLAYING) {
-                    setTimeLeft(player.player.currentPosition)
-                    playbar.invalidate()
-                }
-            }
-        }
 
         // Bundle should contain song
         if (intent.extras != null) {
@@ -57,6 +46,23 @@ class PlayActivity : AppCompatActivity() {
         val bookmarks : ArrayList<Bookmark> = BookmarkDB.getBookmarks(song)
 
         playbar.setBookmarks(bookmarks)
+
+
+        val TICK_TIME : Long = 1000
+
+        // this runs a timer that updates both the progress bar and timeleft every second.
+        fixedRateTimer("updateprog", true, 0, TICK_TIME) {
+            this@PlayActivity.runOnUiThread {
+                if(player.state == PlayerState.PLAYING) {
+                    setTimeLeft(player.player.currentPosition)
+                    playbar.time = player.player.currentPosition
+                    playbar.duration = player.player.duration
+                    playbar.invalidate()
+                }
+            }
+        }
+
+
 
         Log.d(TAG,"Song has MD5 sum: " + song.calculateMD5())
 
@@ -94,8 +100,6 @@ class PlayActivity : AppCompatActivity() {
             val bookmark = Bookmark(hash, time, caption)
 
             BookmarkDB.createBookmark(bookmark)
-
-
         }
     }
 
