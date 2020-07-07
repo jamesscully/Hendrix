@@ -72,20 +72,45 @@ class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr
         canvas?.drawRect(x - (w / 2), 0F, x + (w / 2), height.toFloat() / 2, bookmarkPaint)
     }
 
+    var startX : Float = 0F
+    var startY : Float = 0F
+
+    var endX : Float = 0F
+    var endY : Float = 0F
+
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         val touchX = event?.x ?: -1F
         val touchY = event?.y ?: -1F
 
-        if(cursor.isInBounds(touchX, touchY)) {
-            Log.d(TAG, "We've touched the cursor!")
+        var movedPosition : Boolean = false
+
+        when(event?.action) {
+            MotionEvent.ACTION_DOWN -> {
+                if(cursor.isInBounds(touchX, touchY)) {
+                    Log.d(TAG, "Cursor grabbed")
+                    cursor.isGrabbed = true
+                } else {
+                    return false
+                }
+            }
+
+            MotionEvent.ACTION_MOVE -> {
+                Log.d(TAG, "Cursor moved: X: ${event?.rawX}")
+                cursor.isGrabbed = true
+                cursor.movedX = event?.rawX
+            }
+
+            MotionEvent.ACTION_UP -> {
+                cursor.isGrabbed = false
+
+
+            }
         }
+
+        invalidate()
 
         return super.onTouchEvent(event)
     }
-
-
-
-
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         bitmap = Bitmap.createBitmap(Math.max(w,h), Math.max(w,h), Bitmap.Config.ARGB_8888)
@@ -93,7 +118,6 @@ class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr
     }
 
     override fun onDraw(canvas: Canvas?) {
-        Log.d(TAG, "OnDraw called! Progress: $progress")
         this.canvas = canvas
 
         // draw background
@@ -109,8 +133,11 @@ class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr
 
     }
 
-    class Cursor() {
+    class Cursor {
         private val TAG: String = "PlaybarDisplay.Cursor"
+
+        var isGrabbed = false
+        var movedX = 0F
 
         var x = -1F; var y = -1F
         var w = 5
@@ -121,8 +148,12 @@ class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr
             val height = canvas?.height ?: -1
             val width = canvas?.width ?: -1
 
+            cursorBackgroundPaint.setARGB(255, 255, 255, 255)
 
-            cursorBackgroundPaint.setARGB(255, 255, 255, 255);
+
+            // switchout x depending on if we're grabbed
+            val x : Float = if (isGrabbed) movedX else this.x
+            Log.d(TAG, "Drawing, grabbed ($isGrabbed) at $x")
 
             canvas?.drawCircle(x, height.toFloat() / 2, 20F, cursorBackgroundPaint)
             canvas?.drawRect(x - w, height.toFloat() / 2, x + w, height.toFloat(), cursorBackgroundPaint)
@@ -131,10 +162,8 @@ class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr
         fun isInBounds(x : Float, y : Float) : Boolean {
             val padding = 5
 
-            val upperBound = x + padding
-            val lowerBound = x - padding
-
-            Log.d(TAG, "Checking touch $x ($lowerBound <= $x <= $upperBound)")
+            val upperBound = this.x + padding
+            val lowerBound = this.x - padding
 
             if(x == -1F || y == -1F) {
                 Log.d(TAG, "Touch was null from event; investigate")

@@ -2,6 +2,7 @@ package com.scullyapps.hendrix
 
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.scullyapps.hendrix.data.BookmarkDB
@@ -120,5 +121,10 @@ class PlayActivity : AppCompatActivity() {
         val currentTime = Song.millisToTimestamp(t)
         val durationTime = Song.millisToTimestamp(player.player.duration)
         txt_play_timeleft.text = "$currentTime / $durationTime"
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        playbar.onTouchEvent(event)
+        return super.onTouchEvent(event)
     }
 }

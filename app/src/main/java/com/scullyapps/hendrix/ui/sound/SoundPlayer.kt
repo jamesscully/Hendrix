@@ -15,22 +15,21 @@ enum class PlayerState {
     ERROR
 }
 
-class SoundPlayer {
+class SoundPlayer(s: Song) {
     private val TAG: String = "SoundPlayer";
 
     private val playedSongs : Stack<Song> = Stack()
     private val queuedSongs : Queue<Song> = LinkedList()
 
-    var song = Song()
+    var song = s
 
     var state = PlayerState.STOPPED
 
     var player = MediaPlayer()
 
-    constructor(s : Song) {
-        player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+    init {
+        player.setAudioStreamType(AudioManager.STREAM_MUSIC)
         player = genMediaPlayer(s)
-        song = s
     }
 
     fun play() {
