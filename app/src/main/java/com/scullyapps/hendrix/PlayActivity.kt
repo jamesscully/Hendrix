@@ -125,6 +125,12 @@ class PlayActivity : AppCompatActivity() {
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         playbar.onTouchEvent(event)
+
+        if(playbar.finishedMoving) {
+            player.player.seekTo(playbar.movedToMillis)
+            playbar.finishedMoving = false
+        }
+
         return super.onTouchEvent(event)
     }
 }

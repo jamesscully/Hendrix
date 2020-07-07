@@ -72,17 +72,12 @@ class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr
         canvas?.drawRect(x - (w / 2), 0F, x + (w / 2), height.toFloat() / 2, bookmarkPaint)
     }
 
-    var startX : Float = 0F
-    var startY : Float = 0F
-
-    var endX : Float = 0F
-    var endY : Float = 0F
+    var finishedMoving : Boolean = false
+    var movedToMillis : Int = 0
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         val touchX = event?.x ?: -1F
         val touchY = event?.y ?: -1F
-
-        var movedPosition : Boolean = false
 
         when(event?.action) {
             MotionEvent.ACTION_DOWN -> {
@@ -102,8 +97,8 @@ class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr
 
             MotionEvent.ACTION_UP -> {
                 cursor.isGrabbed = false
-
-
+                finishedMoving = true
+                movedToMillis = millisFromX(event?.rawX)
             }
         }
 
@@ -131,6 +126,14 @@ class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr
         cursor.x = width * progress
         cursor.draw(canvas)
 
+    }
+
+    fun millisFromX(x : Float) : Int {
+        if(x == 0F) {
+            return 0
+        }
+
+        return ((x / width) * duration).toInt()
     }
 
     class Cursor {
