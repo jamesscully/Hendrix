@@ -1,12 +1,7 @@
-package com.scullyapps.hendrix
+package com.scullyapps.hendrix.activities
 
 import android.Manifest
-import android.content.Intent
-import android.media.Image
 import android.os.Bundle
-import android.util.Log
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -17,19 +12,10 @@ import com.google.android.material.navigation.NavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import com.google.android.material.tabs.TabLayout
-import com.scullyapps.hendrix.services.DiscoverMusic
-import com.scullyapps.hendrix.ui.MusicDisplay
-import kotlinx.android.synthetic.main.app_bar_main.*
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.toast
-import org.w3c.dom.Text
+import com.scullyapps.hendrix.R
 
 class MainActivity : AppCompatActivity() {
 
@@ -58,8 +44,10 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_artists,
-                R.id.nav_albums, R.id.nav_songs,
+                R.id.nav_home,
+                R.id.nav_artists,
+                R.id.nav_albums,
+                R.id.nav_songs,
                 R.id.nav_settings
             ), drawerLayout
         )

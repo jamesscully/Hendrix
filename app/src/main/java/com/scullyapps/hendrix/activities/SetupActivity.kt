@@ -1,11 +1,8 @@
-package com.scullyapps.hendrix
+package com.scullyapps.hendrix.activities
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-
-import kotlinx.android.synthetic.main.activity_setup.*
+import com.scullyapps.hendrix.R
 
 class SetupActivity : AppCompatActivity() {
 

@@ -1,10 +1,12 @@
-package com.scullyapps.hendrix
+package com.scullyapps.hendrix.activities
 
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.scullyapps.hendrix.GlobalApp
+import com.scullyapps.hendrix.R
 import com.scullyapps.hendrix.data.BookmarkDB
 import com.scullyapps.hendrix.models.song.Bookmark
 import com.scullyapps.hendrix.models.song.Song
@@ -58,7 +60,7 @@ class PlayActivity : AppCompatActivity() {
                     setTimeLeft(player.player.currentPosition)
                     playbar.time = player.player.currentPosition
                     playbar.duration = player.player.duration
-                    playbar.invalidate()
+                    updateUI()
                 }
             }
         }
@@ -73,7 +75,6 @@ class PlayActivity : AppCompatActivity() {
 
     fun setupButtons() {
         btn_play.setOnClickListener {
-
             if(player.state == PlayerState.ERROR) {
                 Log.e(TAG, "Player is not in a usable state. Fix!")
                 return@setOnClickListener
@@ -81,17 +82,21 @@ class PlayActivity : AppCompatActivity() {
 
             // toggle; use small text (to preserve layout for initial testing)
             if(player.state == PlayerState.PLAYING) {
-                btn_play.setImageDrawable(ContextCompat.getDrawable(GlobalApp.getAppContext(), R.drawable.ic_play))
+                btn_play.setImageDrawable(ContextCompat.getDrawable(
+                    GlobalApp.getAppContext(),
+                    R.drawable.ic_play
+                ))
                 player.pause()
             } else {
-                btn_play.setImageDrawable(ContextCompat.getDrawable(GlobalApp.getAppContext(), R.drawable.ic_pause))
+                btn_play.setImageDrawable(ContextCompat.getDrawable(
+                    GlobalApp.getAppContext(),
+                    R.drawable.ic_pause
+                ))
                 player.play()
             }
 
             updateUI()
         }
-
-
 
         btn_play_bookmark.setOnClickListener {
             val time = player.player.currentPosition
@@ -111,6 +116,12 @@ class PlayActivity : AppCompatActivity() {
         txt_play_info.text = "${s.artist} - ${s.title}"
         setTimeLeft(player.player.currentPosition)
 
+        if(playbar.finishedMoving) {
+            player.player.seekTo(playbar.millisFromCursor())
+            playbar.finishedMoving = false
+            player.play()
+        }
+
         playbar.time = player.player.currentPosition
         playbar.duration = player.player.duration
 
@@ -124,13 +135,6 @@ class PlayActivity : AppCompatActivity() {
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        playbar.onTouchEvent(event)
-
-        if(playbar.finishedMoving) {
-            player.player.seekTo(playbar.movedToMillis)
-            playbar.finishedMoving = false
-        }
-
         return super.onTouchEvent(event)
     }
 }

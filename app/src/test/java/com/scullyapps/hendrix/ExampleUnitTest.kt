@@ -28,6 +28,7 @@ class ExampleUnitTest {
         assertEquals("00:02", Song.millisToTimestamp(2000))
         assertEquals("01:05:02", Song.millisToTimestamp(3902000))
         assertEquals("02:00:00", Song.millisToTimestamp(7200000))
+        assertEquals("00:00", Song.millisToTimestamp(0))
     }
 
 }

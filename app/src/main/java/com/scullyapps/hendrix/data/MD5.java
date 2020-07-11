@@ -1,4 +1,4 @@
-package com.scullyapps.hendrix;
+package com.scullyapps.hendrix.data;
 
 /* Pulled from CyanogenMod
  * Copyright (C) 2012 The CyanogenMod Project

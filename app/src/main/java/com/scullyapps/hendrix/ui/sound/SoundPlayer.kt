@@ -15,6 +15,7 @@ enum class PlayerState {
     ERROR
 }
 
+//todo mediaplayer should be extracted to a service for background playing
 class SoundPlayer(s: Song) {
     private val TAG: String = "SoundPlayer";
 
@@ -44,11 +45,9 @@ class SoundPlayer(s: Song) {
 
 //        mp.setOnCompletionListener {_ ->
 //            val ns = queuedSongs.poll()
-//
 //            if(ns == null) {
 //                // handle null
 //            }
-//
 //            mp.setNextMediaPlayer(genMediaPlayer(ns))
 //            mp.start()
 //        }

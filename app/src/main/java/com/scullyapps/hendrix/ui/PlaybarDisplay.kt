@@ -13,18 +13,13 @@ import com.scullyapps.hendrix.ui.sound.SoundPlayer
 class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr) {
     private val TAG: String = "PlaybarDisplay";
 
-    private var bitmap : Bitmap? = null
-    var canvas : Canvas? = null
-
-    private var path : Path = Path()
-
     private var playedPaint : Paint = Paint()
     private var bookmarkPaint: Paint = Paint()
     private var backgroundPaint: Paint = Paint()
 
     private var bookmarks : ArrayList<Bookmark> = ArrayList()
 
-    private val cursor = Cursor()
+    val cursor = Cursor()
 
     // current time on song
     var time : Int = 1
@@ -58,13 +53,7 @@ class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr
         bookmarks = marks
     }
 
-    fun drawAllBookmarks() {
-        for(x in bookmarks) {
-            drawBookmark(x)
-        }
-    }
-
-    fun drawBookmark(b : Bookmark) {
+    fun drawBookmark(b : Bookmark, canvas: Canvas?) {
         // provides x position on playbar for bookmark
         val x = (b.timestamp.toFloat() / duration.toFloat()) * width
         val w : Int = 5
@@ -76,73 +65,102 @@ class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr
     var movedToMillis : Int = 0
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        val touchX = event?.x ?: -1F
-        val touchY = event?.y ?: -1F
 
-        when(event?.action) {
+        if(event == null)
+            return false;
+
+        // if not in our playbar bounds, ignore
+//        val inBounds = (event.rawY > y && event.rawY < (y + measuredHeight))
+//
+//        if(!inBounds) {
+//            Log.d(TAG, "Ignoring touch ($touchX,$touchY) raw (${event.rawX}, ${event.rawY}), bar y: $y height: $measuredHeight")
+//            return false
+//        }
+
+        when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-                if(cursor.isInBounds(touchX, touchY)) {
-                    Log.d(TAG, "Cursor grabbed")
-                    cursor.isGrabbed = true
-                } else {
-                    return false
-                }
+                Log.d(TAG, "Cursor grabbed")
+                cursor.isGrabbed = true
             }
 
             MotionEvent.ACTION_MOVE -> {
-                Log.d(TAG, "Cursor moved: X: ${event?.rawX}")
-                cursor.isGrabbed = true
-                cursor.movedX = event?.rawX
+                if(cursor.isGrabbed) {
+                    Log.d(TAG, "Cursor moved")
+                    cursor.movedX = event.rawX
+                    invalidate()
+                }
             }
 
             MotionEvent.ACTION_UP -> {
-                cursor.isGrabbed = false
-                finishedMoving = true
-                movedToMillis = millisFromX(event?.rawX)
+                if(cursor.isGrabbed ) {
+                    Log.d(TAG, "Cursor released")
+                    cursor.isGrabbed = false
+                    finishedMoving = true
+                    cursor.x = MathUtils.clamp(event.rawX, 0F, width.toFloat())
+                }
             }
         }
 
-        invalidate()
-
-        return super.onTouchEvent(event)
+        return true
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        bitmap = Bitmap.createBitmap(Math.max(w,h), Math.max(w,h), Bitmap.Config.ARGB_8888)
-        canvas = Canvas(bitmap)
+//        bitmap = Bitmap.createBitmap(Math.max(w,h), Math.max(w,h), Bitmap.Config.ARGB_8888)
+//        canvas = Canvas(bitmap)
     }
 
+    fun drawProgressBar(canvas: Canvas?) {
+        // set width to how far we've progressed in song
+        val rect = Rect()
+
+        rect.left = 0
+        rect.top = height / 2
+        rect.bottom = height;
+
+        if(cursor.isGrabbed) {
+            rect.right = cursor.movedX.toInt()
+        } else {
+            rect.right = (width * progress).toInt()
+        }
+
+        canvas?.drawRect(rect, playedPaint)
+    }
+
+
     override fun onDraw(canvas: Canvas?) {
-        this.canvas = canvas
 
         // draw background
         canvas?.drawRect(0F, 0F, width.toFloat(), height.toFloat(), backgroundPaint)
 
-        // set width to how far we've progressed in song
-        canvas?.drawRect(0F, (height.toFloat() / 2), width.toFloat() * progress, height.toFloat(), playedPaint)
+        drawProgressBar(canvas)
 
-        drawAllBookmarks()
+        for(b in bookmarks) {
+            drawBookmark(b, canvas)
+        }
 
         cursor.x = width * progress
         cursor.draw(canvas)
-
     }
 
-    fun millisFromX(x : Float) : Int {
-        if(x == 0F) {
+    fun millisFromCursor() : Int {
+        if(cursor.x == 0F) {
             return 0
         }
-
-        return ((x / width) * duration).toInt()
+        return ((cursor.x / width) * duration).toInt()
     }
+
 
     class Cursor {
         private val TAG: String = "PlaybarDisplay.Cursor"
 
+        // movedX is temporary to store where the pointer is on the X scale
         var isGrabbed = false
         var movedX = 0F
 
+        // default position
         var x = -1F; var y = -1F
+
+        // width of the cursor grab
         var w = 5
 
         fun draw(canvas: Canvas?) {
@@ -153,7 +171,6 @@ class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr
 
             cursorBackgroundPaint.setARGB(255, 255, 255, 255)
 
-
             // switchout x depending on if we're grabbed
             val x : Float = if (isGrabbed) movedX else this.x
             Log.d(TAG, "Drawing, grabbed ($isGrabbed) at $x")
@@ -163,11 +180,13 @@ class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr
         }
 
         fun isInBounds(x : Float, y : Float) : Boolean {
-            val padding = 5
+            // allow for clicks within certain distance to activate dragging
+            val padding = 15
 
             val upperBound = this.x + padding
             val lowerBound = this.x - padding
 
+            // -1 is sent if an error occurs previous to here
             if(x == -1F || y == -1F) {
                 Log.d(TAG, "Touch was null from event; investigate")
                 return false

@@ -3,7 +3,7 @@ package com.scullyapps.hendrix.models.song
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
-import com.scullyapps.hendrix.MD5
+import com.scullyapps.hendrix.data.MD5
 import java.io.File
 import java.io.Serializable
 

@@ -13,7 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.scullyapps.hendrix.PlayActivity
+import com.scullyapps.hendrix.activities.PlayActivity
 
 import com.scullyapps.hendrix.R
 import com.scullyapps.hendrix.models.song.Song
