@@ -3,17 +3,17 @@ package com.scullyapps.hendrix.activities
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import com.scullyapps.hendrix.GlobalApp
 import com.scullyapps.hendrix.R
 import com.scullyapps.hendrix.activities.viewmodels.PlayViewModel
 import com.scullyapps.hendrix.data.BookmarkDB
 import com.scullyapps.hendrix.models.song.Bookmark
 import com.scullyapps.hendrix.models.song.Song
-import com.scullyapps.hendrix.ui.PlaybarDisplay
 import com.scullyapps.hendrix.ui.sound.PlayerState
-import com.scullyapps.hendrix.ui.sound.SoundPlayer
 import kotlinx.android.synthetic.main.activity_play.*
 import kotlin.concurrent.fixedRateTimer
 
@@ -21,13 +21,7 @@ class PlayActivity : AppCompatActivity() {
 
     val TAG = "PlayActivity"
 
-    // create default song
-    var song : Song = Song()
-
-    lateinit var player : SoundPlayer
-    lateinit var playbar: PlaybarDisplay
-
-
+    private val model: PlayViewModel by viewModels<PlayViewModel>()
 
     // TODO move all data to ViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,33 +32,40 @@ class PlayActivity : AppCompatActivity() {
         // Bundle should contain song
         if (intent.extras != null) {
             if(intent.extras.containsKey("song")) {
-                song = intent.extras.getSerializable("song") as Song
-                Log.d(TAG, "Retrieved Song: $song")
-                player = SoundPlayer(song)
+                model.song = intent.extras.getSerializable("song") as Song
+                    Log.d(TAG, "Retrieved Song: $model.song")
             }
         } else {
             Log.e(TAG, "Player was started with no bundle; no songs!")
             finishActivity(0)
         }
 
-        // alias ui element
-        playbar = playbarDisplay
 
-        val bookmarks : ArrayList<Bookmark> = BookmarkDB.getBookmarks(song)
-        playbar.setBookmarks(bookmarks)
+
+        model.timeleftText.observe(this, Observer {
+            txt_play_timeleft.text = it
+        })
+
+        model.songinfoText.observe(this, Observer {
+            txt_play_info.text = it
+        })
+
+        model.bookmarks.observe(this, Observer {
+            model.playbar.setBookmarks(it)
+        })
 
         val TICK_TIME : Long = 1000
         fixedRateTimer("updateprog", true, 0, TICK_TIME) {
             this@PlayActivity.runOnUiThread {
-                if(player.state == PlayerState.PLAYING) {
-                    playbar.time = player.player.currentPosition
-                    playbar.duration = player.player.duration
+                if(model.player.state == PlayerState.PLAYING) {
+                    model.playbar.time = model.player.player.currentPosition
+                    model.playbar.duration = model.player.player.duration
                     updateUI()
                 }
             }
         }
 
-        Log.d(TAG,"Song has MD5 sum: " + song.calculateMD5())
+        Log.d(TAG,"Song has MD5 sum: " + model.song.calculateMD5())
 
         setupButtons()
         updateUI()
@@ -74,7 +75,7 @@ class PlayActivity : AppCompatActivity() {
 
         // Play/pause button
         btn_play.setOnClickListener {
-            if(player.state == PlayerState.ERROR) {
+            if(model.player.state == PlayerState.ERROR) {
                 Log.e(TAG, "Player is not in a usable state. Fix!")
                 return@setOnClickListener
             }
@@ -82,12 +83,12 @@ class PlayActivity : AppCompatActivity() {
             val drawable: Int
 
             // toggle
-            if(player.state == PlayerState.PLAYING) {
+            if(model.player.state == PlayerState.PLAYING) {
                 drawable = R.drawable.ic_play
-                player.pause()
+                model.player.pause()
             } else {
                 drawable = R.drawable.ic_pause
-                player.play()
+                model.player.play()
             }
 
             // update play button
@@ -101,8 +102,8 @@ class PlayActivity : AppCompatActivity() {
 
         // Bookmark button
         btn_play_bookmark.setOnClickListener {
-            val time = player.player.currentPosition
-            val hash = player.song.calculateMD5()
+            val time = model.player.player.currentPosition
+            val hash = model.player.song.calculateMD5()
             val caption = "This is a test caption"
 
             val bookmark = Bookmark(hash, time, caption)
@@ -113,27 +114,28 @@ class PlayActivity : AppCompatActivity() {
 
     // Updates control UI from player (timeleft, artistname, etc)
     fun updateUI() {
-        val s = player.song
+        val s = model.player.song
 
-        txt_play_info.text = "${s.artist} - ${s.title}"
-        setTimeLeft(player.player.currentPosition)
+        model.songinfoText.value = "${s.artist} - ${s.title}"
+        setTimeLeft(model.player.player.currentPosition)
 
-        if(playbar.finishedMoving) {
-            player.player.seekTo(playbar.millisFromCursor())
-            playbar.finishedMoving = false
-            player.play()
+        if(model.playbar.finishedMoving) {
+            model.player.player.seekTo(model.playbar.millisFromCursor())
+            model.playbar.finishedMoving = false
+            model.player.play()
         }
 
-        playbar.time = player.player.currentPosition
-        playbar.duration = player.player.duration
+        model.playbar.time = model.player.player.currentPosition
+        model.playbar.duration = model.player.player.duration
 
-        playbar.invalidate()
+        model.playbar.invalidate()
     }
+
 
     private fun setTimeLeft(t : Int) {
         val currentTime = Song.millisToTimestamp(t)
-        val durationTime = Song.millisToTimestamp(player.player.duration)
-        txt_play_timeleft.text = "$currentTime / $durationTime"
+        val durationTime = Song.millisToTimestamp(model.player.player.duration)
+        model.timeleftText.value = "$currentTime / $durationTime"
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
