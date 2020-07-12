@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.scullyapps.hendrix.GlobalApp
 import com.scullyapps.hendrix.R
+import com.scullyapps.hendrix.activities.viewmodels.PlayViewModel
 import com.scullyapps.hendrix.data.BookmarkDB
 import com.scullyapps.hendrix.models.song.Bookmark
 import com.scullyapps.hendrix.models.song.Song
@@ -26,6 +27,8 @@ class PlayActivity : AppCompatActivity() {
     lateinit var player : SoundPlayer
     lateinit var playbar: PlaybarDisplay
 
+
+
     // TODO move all data to ViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,28 +47,22 @@ class PlayActivity : AppCompatActivity() {
             finishActivity(0)
         }
 
+        // alias ui element
         playbar = playbarDisplay
 
         val bookmarks : ArrayList<Bookmark> = BookmarkDB.getBookmarks(song)
-
         playbar.setBookmarks(bookmarks)
 
-
         val TICK_TIME : Long = 1000
-
-        // this runs a timer that updates both the progress bar and timeleft every second.
         fixedRateTimer("updateprog", true, 0, TICK_TIME) {
             this@PlayActivity.runOnUiThread {
                 if(player.state == PlayerState.PLAYING) {
-                    setTimeLeft(player.player.currentPosition)
                     playbar.time = player.player.currentPosition
                     playbar.duration = player.player.duration
                     updateUI()
                 }
             }
         }
-
-
 
         Log.d(TAG,"Song has MD5 sum: " + song.calculateMD5())
 
@@ -74,30 +71,35 @@ class PlayActivity : AppCompatActivity() {
     }
 
     fun setupButtons() {
+
+        // Play/pause button
         btn_play.setOnClickListener {
             if(player.state == PlayerState.ERROR) {
                 Log.e(TAG, "Player is not in a usable state. Fix!")
                 return@setOnClickListener
             }
 
-            // toggle; use small text (to preserve layout for initial testing)
+            val drawable: Int
+
+            // toggle
             if(player.state == PlayerState.PLAYING) {
-                btn_play.setImageDrawable(ContextCompat.getDrawable(
-                    GlobalApp.getAppContext(),
-                    R.drawable.ic_play
-                ))
+                drawable = R.drawable.ic_play
                 player.pause()
             } else {
-                btn_play.setImageDrawable(ContextCompat.getDrawable(
-                    GlobalApp.getAppContext(),
-                    R.drawable.ic_pause
-                ))
+                drawable = R.drawable.ic_pause
                 player.play()
             }
+
+            // update play button
+            btn_play.setImageDrawable(ContextCompat.getDrawable(
+                GlobalApp.getAppContext(),
+                drawable
+            ))
 
             updateUI()
         }
 
+        // Bookmark button
         btn_play_bookmark.setOnClickListener {
             val time = player.player.currentPosition
             val hash = player.song.calculateMD5()
