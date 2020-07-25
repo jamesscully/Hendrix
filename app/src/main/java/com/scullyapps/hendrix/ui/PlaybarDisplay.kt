@@ -129,6 +129,10 @@ class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr
 
     override fun onDraw(canvas: Canvas?) {
 
+        if(finishedMoving) {
+            return
+        }
+
         // draw background
         canvas?.drawRect(0F, 0F, width.toFloat(), height.toFloat(), backgroundPaint)
 

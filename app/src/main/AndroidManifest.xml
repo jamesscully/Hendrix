@@ -18,6 +18,7 @@
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <service android:name=".services.DiscoverMusic" />
+        <service android:name=".services.SoundService" />
 
         <activity
             android:name=".activities.SetupActivity"
