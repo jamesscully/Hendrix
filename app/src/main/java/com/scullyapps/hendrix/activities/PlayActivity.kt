@@ -53,9 +53,6 @@ class PlayActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-//        Intent(this, SoundService::class.java).also {
-//            bindService(intent, connection, 0)
-//        }
         startAndBind()
     }
 
@@ -98,11 +95,16 @@ class PlayActivity : AppCompatActivity() {
         val TICK_TIME : Long = 1000
         fixedRateTimer("updateprog", true, 0, TICK_TIME) {
             this@PlayActivity.runOnUiThread {
-//                if(model.player.state == PlayerState.PLAYING) {
-//                    model.playbar.time = model.player.player.currentPosition
-//                    model.playbar.duration = model.player.player.duration
-//                    updateUI()
-//                }
+
+                // return if we're not bound
+                if(!bound)
+                    return@runOnUiThread
+
+                if(service.state == PlayerState.PLAYING) {
+                    model.playbar.time = service.getPosition()
+                    model.playbar.duration = service.getDuration()
+                    updateUI()
+                }
             }
         }
 
@@ -161,10 +163,12 @@ class PlayActivity : AppCompatActivity() {
 
     // Updates control UI from player (timeleft, artistname, etc)
     fun updateUI() {
-        val s = model.player.song
+        val s = model.song
 
         model.songinfoText.value = "${s.artist} - ${s.title}"
-        setTimeLeft(model.player.player.currentPosition)
+
+        if(bound)
+            setTimeLeft(service.getPosition())
 
         if(model.playbar.finishedMoving) {
             model.player.player.seekTo(model.playbar.millisFromCursor())
