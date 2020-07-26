@@ -21,13 +21,7 @@ import com.scullyapps.hendrix.models.song.Song
 import java.io.IOException
 import java.lang.IllegalArgumentException
 import java.util.*
-
-enum class PlayerState {
-    PLAYING,
-    PAUSED,
-    STOPPED,
-    ERROR
-}
+import kotlin.concurrent.fixedRateTimer
 
 class SoundService : Service() {
     private val TAG: String = "SoundService";
@@ -44,6 +38,19 @@ class SoundService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d(TAG, "Service has been started!")
+
+        // prepare notification channel ahead of time
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            makeNotificationChannel()
+
+        fixedRateTimer("soundservice_timer", true, 0, 1000) {
+            this@SoundService.run {
+                if(state == PlayerState.PLAYING) {
+                    showNotification()
+                }
+            }
+        }
+
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -116,6 +123,7 @@ class SoundService : Service() {
             Log.d(TAG, "Pausing song ${song}")
             player.pause()
             state = PlayerState.PAUSED
+            showNotification()
         }
     }
 
@@ -125,12 +133,14 @@ class SoundService : Service() {
             Log.d(TAG, "Playing song ${song}")
             player.start()
             state = PlayerState.PLAYING
+            showNotification()
         }
     }
 
     fun stop() {
         player.stop()
         state = PlayerState.STOPPED
+        showNotification()
     }
 
     fun next() {
@@ -169,30 +179,40 @@ class SoundService : Service() {
     // Notifications
     //
 
-    val CHANNEL_ID = "HendrixChannelID"
+    private val CHANNEL_ID = "HendrixChannelID"
 
-    fun makeNotification() {
+    // for now, we'll only need one notification to show playback
+    private val NOTIF_ID = 133742
 
-        val nId = 1327
-
+    private fun makeNotification() : Notification {
         val notification = NotificationCompat.Builder(this, "HendrixChannelID")
             .setSmallIcon(R.drawable.logo)
-            .setContentTitle("Hendrix is playing")
-            .setContentText("${song?.artist} - ${song?.title}").build()
+            .setContentTitle("Hendrix is ${state.sentenceString}")
+            .setContentText("${song?.artist} - ${song?.title} ${getCurrentTimestamp()} / ${getDurationTimestamp()}")
+            .setOnlyAlertOnce(true)
+            .build()
+        return notification
+    }
+
+    fun hideNotification() {
+        with(NotificationManagerCompat.from(this)) {
+            cancel(NOTIF_ID)
+        }
+    }
+
+    fun showNotification() {
+        val notification = makeNotification()
 
         with(NotificationManagerCompat.from(this)) {
-            notify(nId, notification)
+            notify(NOTIF_ID, notification)
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun makeNotificationChannel() {
-
         val nChannelName = "HendrixChannel"
         val nChannelDesc = "HendrixDescription"
-        val nImportance = NotificationManager.IMPORTANCE_HIGH
-
-
+        val nImportance = NotificationManager.IMPORTANCE_LOW
 
         val channel = NotificationChannel(CHANNEL_ID, nChannelName, nImportance).apply {
             description = nChannelDesc

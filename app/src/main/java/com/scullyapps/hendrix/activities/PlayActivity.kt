@@ -83,8 +83,7 @@ class PlayActivity : AppCompatActivity() {
             finishActivity(0)
         }
 
-        val TICK_TIME : Long = 1000
-        fixedRateTimer("updateprog", true, 0, TICK_TIME) {
+        fixedRateTimer("updateprog", true, 0, 1000) {
             this@PlayActivity.runOnUiThread {
 
                 // return if we're not bound
@@ -152,10 +151,7 @@ class PlayActivity : AppCompatActivity() {
 
                 service.play()
 
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                    service.makeNotificationChannel()
-
-                service.makeNotification()
+                service.showNotification()
             }
 
             // update play button
@@ -213,9 +209,5 @@ class PlayActivity : AppCompatActivity() {
         val currentTime = Song.millisToTimestamp(t)
         val durationTime = Song.millisToTimestamp(model.player.player.duration)
         model.timeleftText.value = "$currentTime / $durationTime"
-    }
-
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        return super.onTouchEvent(event)
     }
 }

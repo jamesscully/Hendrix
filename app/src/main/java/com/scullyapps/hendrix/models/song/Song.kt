@@ -81,10 +81,8 @@ class Song : Serializable{
     // "static" methods
     companion object {
         fun isValidAudioExt(fileExt: String): Boolean {
-
             val acceptedFileTypes: Array<String> = arrayOf("mp3", "m4a")
             return acceptedFileTypes.contains(fileExt)
-
         }
 
         // takes in duration as milliseconds, returns timestamp i.e. 13:37 / 1:13:37

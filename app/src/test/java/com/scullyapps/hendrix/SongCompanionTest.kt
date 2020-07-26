@@ -5,12 +5,8 @@ import org.junit.Test
 
 import org.junit.Assert.*
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
-class ExampleUnitTest {
+
+class SongCompanionTest {
 
     //         x y  z
     // convert 1:30:15 to millis
@@ -29,5 +25,17 @@ class ExampleUnitTest {
         assertEquals("01:05:02", Song.millisToTimestamp(3902000))
         assertEquals("02:00:00", Song.millisToTimestamp(7200000))
         assertEquals("00:00", Song.millisToTimestamp(0))
+    }
+
+    @Test
+    fun validAudioExtTest() {
+        assertTrue(Song.isValidAudioExt("mp3"))
+        assertTrue(Song.isValidAudioExt("m4a"))
+
+        assertFalse(Song.isValidAudioExt("wav"))
+        assertFalse(Song.isValidAudioExt("mp4"))
+        assertFalse(Song.isValidAudioExt("mpeg"))
+        assertFalse(Song.isValidAudioExt("raw"))
+        assertFalse(Song.isValidAudioExt("flac"))
     }
 }
