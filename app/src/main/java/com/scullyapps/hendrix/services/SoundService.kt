@@ -76,6 +76,7 @@ class SoundService : Service() {
     //
     private fun loadFromFile(path: String) : Boolean {
         return try {
+            player.reset()
             player.setDataSource(path)
             player.prepare()
             true
@@ -165,6 +166,10 @@ class SoundService : Service() {
         upNext.push(song)
 
         loadSong(next)
+    }
+
+    fun seekTo(pos: Int) {
+        player.seekTo(pos)
     }
 
 

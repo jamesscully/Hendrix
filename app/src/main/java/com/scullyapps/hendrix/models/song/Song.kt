@@ -71,8 +71,14 @@ class Song : Serializable{
         return md5 == calculateMD5()
     }
 
-    // "static" methods
+    override fun equals(other: Any?): Boolean {
+        if(other !is Song)
+            return false
 
+        return this.path == other.path
+    }
+
+    // "static" methods
     companion object {
         fun isValidAudioExt(fileExt: String): Boolean {
 

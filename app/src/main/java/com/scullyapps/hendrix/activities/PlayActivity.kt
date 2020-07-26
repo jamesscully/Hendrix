@@ -67,30 +67,20 @@ class PlayActivity : AppCompatActivity() {
         setContentView(R.layout.activity_play)
         setSupportActionBar(findViewById(R.id.toolbar))
 
+        model.playbar = playbarDisplay
+
+        setupObservers()
+
         // Bundle should contain song
         if (intent.extras != null) {
             if(intent.extras.containsKey("song")) {
-                model.song = intent.extras.getSerializable("song") as Song
+                model.song = intent?.extras?.getSerializable("song") as Song
                     Log.d(TAG, "Retrieved Song: $model.song")
             }
         } else {
             Log.e(TAG, "Player was started with no bundle; no songs!")
             finishActivity(0)
         }
-
-        model.playbar = playbarDisplay
-
-        model.timeleftText.observe(this, Observer {
-            txt_play_timeleft.text = it
-        })
-
-        model.songinfoText.observe(this, Observer {
-            txt_play_info.text = it
-        })
-
-        model.bookmarks.observe(this, Observer {
-            model.playbar.setBookmarks(it)
-        })
 
         val TICK_TIME : Long = 1000
         fixedRateTimer("updateprog", true, 0, TICK_TIME) {
@@ -112,6 +102,25 @@ class PlayActivity : AppCompatActivity() {
 
         setupButtons()
         updateUI()
+
+        model.playbar.invalidate()
+    }
+
+    /*
+        Observers can be set-up independently; place here
+     */
+    fun setupObservers() {
+        model.timeleftText.observe(this, Observer {
+            txt_play_timeleft.text = it
+        })
+
+        model.songinfoText.observe(this, Observer {
+            txt_play_info.text = it
+        })
+
+        model.bookmarks.observe(this, Observer {
+            model.playbar.setBookmarks(it)
+        })
     }
 
     fun setupButtons() {
@@ -126,18 +135,21 @@ class PlayActivity : AppCompatActivity() {
             val drawable: Int
 
             // toggle
-            if(service.state == PlayerState.PLAYING) {
+            if(service.state == PlayerState.PLAYING && bound) {
                 drawable = R.drawable.ic_play
-                if(bound) {
-                    service.pause()
-                    Log.d(TAG, "Pausing service")
-                }
+                service.pause()
             } else {
                 drawable = R.drawable.ic_pause
-                if(bound) {
-                    service.play()
-                    Log.d(TAG, "Playing service")
+
+                if(service.song != null) {
+                    if(service.song!! != model.song) {
+                        service.stop()
+                        service.loadSong(model.song)
+                        updateUI()
+                    }
                 }
+
+                service.play()
             }
 
             // update play button
@@ -170,10 +182,10 @@ class PlayActivity : AppCompatActivity() {
         if(bound)
             setTimeLeft(service.getPosition())
 
-        if(model.playbar.finishedMoving) {
-            model.player.player.seekTo(model.playbar.millisFromCursor())
+        if(model.playbar.finishedMoving && bound) {
+            service.seekTo(model.playbar.millisFromCursor())
             model.playbar.finishedMoving = false
-            model.player.play()
+            service.play()
         }
 
         model.playbar.invalidate()
@@ -181,6 +193,11 @@ class PlayActivity : AppCompatActivity() {
 
     private fun startAndBind() {
         Log.d(TAG, "Starting and binding")
+
+        // curious if this will occur, leaving here
+        if(bound)
+            Log.w(TAG, "Warning: starting and binding whilst bound?")
+
         val intent = Intent(this, SoundService::class.java)
         startService(intent)
         bindService(intent, connection, Context.BIND_AUTO_CREATE)
