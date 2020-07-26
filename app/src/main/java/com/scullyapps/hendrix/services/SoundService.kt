@@ -1,12 +1,22 @@
 package com.scullyapps.hendrix.services
 
+import android.annotation.TargetApi
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Binder
+import android.os.Build
 import android.os.IBinder
 import android.util.Log
+import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.math.MathUtils
+import com.scullyapps.hendrix.R
 import com.scullyapps.hendrix.models.song.Song
 import java.io.IOException
 import java.lang.IllegalArgumentException
@@ -97,23 +107,6 @@ class SoundService : Service() {
         upNext.push(song)
     }
 
-    private fun genMediaPlayer(s : Song) : MediaPlayer {
-        val mp = MediaPlayer()
-
-        try {
-            mp.setDataSource(s.path)
-            mp.prepare()
-        } catch (e : IOException) {
-            Log.e(TAG, e.toString())
-            state = PlayerState.ERROR
-        } catch (e : IllegalArgumentException) {
-            Log.e(TAG, e.toString())
-            state = PlayerState.ERROR
-        } finally {
-            return mp
-        }
-    }
-
     //
     // Playback methods
     //
@@ -172,6 +165,40 @@ class SoundService : Service() {
         player.seekTo(pos)
     }
 
+    //
+    // Notifications
+    //
+
+    val CHANNEL_ID = "HendrixChannelID"
+
+    fun makeNotification() {
+
+        val nId = 1327
+
+        val notification = NotificationCompat.Builder(this, "HendrixChannelID")
+            .setSmallIcon(R.drawable.logo)
+            .setContentTitle("Hendrix is playing")
+            .setContentText("${song?.artist} - ${song?.title}").build()
+
+        with(NotificationManagerCompat.from(this)) {
+            notify(nId, notification)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun makeNotificationChannel() {
+
+        val nChannelName = "HendrixChannel"
+        val nChannelDesc = "HendrixDescription"
+        val nImportance = NotificationManager.IMPORTANCE_HIGH
 
 
+
+        val channel = NotificationChannel(CHANNEL_ID, nChannelName, nImportance).apply {
+            description = nChannelDesc
+        }
+
+        val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        nm.createNotificationChannel(channel)
+    }
 }
