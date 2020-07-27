@@ -1,9 +1,8 @@
 package com.scullyapps.hendrix
 
 import com.scullyapps.hendrix.models.song.Song
-import org.junit.Test
-
 import org.junit.Assert.*
+import org.junit.Test
 
 
 class SongCompanionTest {

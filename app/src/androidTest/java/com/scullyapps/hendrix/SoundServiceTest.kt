@@ -10,12 +10,11 @@ import androidx.test.runner.AndroidJUnit4
 import com.scullyapps.hendrix.models.song.Song
 import com.scullyapps.hendrix.services.SoundService
 import org.junit.After
-
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-
-import org.junit.Assert.*
-import org.junit.Rule
 
 @get:Rule
 val serviceRule = ServiceTestRule()

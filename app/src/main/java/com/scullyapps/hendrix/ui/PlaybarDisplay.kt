@@ -1,14 +1,15 @@
 package com.scullyapps.hendrix.ui
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Rect
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.core.math.MathUtils
 import com.scullyapps.hendrix.models.song.Bookmark
-import com.scullyapps.hendrix.ui.sound.SoundPlayer
 
 class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr) {
     private val TAG: String = "PlaybarDisplay";
