@@ -29,7 +29,7 @@ class SoundService : Service() {
     var song : Song? = null
 
     private val played = Stack<Song>()
-    private val upNext: Queue<Song> = LinkedList()
+    private val upNext: Deque<Song> = LinkedList()
 
     var state : PlayerState = PlayerState.STOPPED
 
@@ -164,6 +164,8 @@ class SoundService : Service() {
         played.push(song)
 
         loadSong(next)
+
+        Log.d(TAG, "Song (next) is now: ${song?.title}")
     }
 
     fun prev() {
@@ -176,9 +178,10 @@ class SoundService : Service() {
         val next = played.pop()
 
         // add to queue
-        upNext.add(song)
+        upNext.addFirst(next)
 
         loadSong(next)
+        Log.d(TAG, "Song (prev) is now: ${song?.title}")
     }
 
     fun seekTo(pos: Int) {
@@ -236,6 +239,6 @@ class SoundService : Service() {
     //
 
     fun strStats() : String {
-        return "Current: ${song?.title}, History: ${played.size}, Queue: ${upNext.size}"
+        return "Current: ${song?.title}, History: ${played}, Queue: ${upNext}"
     }
 }

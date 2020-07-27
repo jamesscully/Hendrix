@@ -43,13 +43,10 @@ class PlayActivity : AppCompatActivity() {
             service = binder.getService()
             bound = true
 
-            Log.d(TAG, "Servicebound!")
-
             if(service.song == null) {
                 service.loadSong(model.song)
             }
         }
-
     }
 
     override fun onStart() {
@@ -90,7 +87,7 @@ class PlayActivity : AppCompatActivity() {
                 if(!bound)
                     return@runOnUiThread
 
-                if(service.state == PlayerState.PLAYING) {
+                if(service.state == PlayerState.PLAYING && model.song == service.song) {
                     model.playbar.time = service.getPosition()
                     model.playbar.duration = service.getDuration()
                     updateUI()

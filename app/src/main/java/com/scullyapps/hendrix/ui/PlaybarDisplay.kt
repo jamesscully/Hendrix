@@ -22,9 +22,9 @@ class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr
     val cursor = Cursor()
 
     // current time on song
-    var time : Int = 1
+    var time : Int = 0
     // duration of song
-    var duration : Int = 1
+    var duration : Int = 0
 
     // gives percentage of way through with up/low bounds
     var progress : Float = 0.0f
@@ -177,7 +177,6 @@ class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr
 
             // switchout x depending on if we're grabbed
             val x : Float = if (isGrabbed) movedX else this.x
-            Log.d(TAG, "Drawing, grabbed ($isGrabbed) at $x")
 
             canvas?.drawCircle(x, height.toFloat() / 2, 20F, cursorBackgroundPaint)
             canvas?.drawRect(x - w, height.toFloat() / 2, x + w, height.toFloat(), cursorBackgroundPaint)
