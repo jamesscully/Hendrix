@@ -1,6 +1,5 @@
 package com.scullyapps.hendrix.services
 
-import android.annotation.TargetApi
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -19,7 +18,6 @@ import androidx.core.math.MathUtils
 import com.scullyapps.hendrix.R
 import com.scullyapps.hendrix.models.song.Song
 import java.io.IOException
-import java.lang.IllegalArgumentException
 import java.util.*
 import kotlin.concurrent.fixedRateTimer
 
@@ -27,14 +25,18 @@ class SoundService : Service() {
     private val TAG: String = "SoundService";
 
     private val player : MediaPlayer = MediaPlayer()
+
     var song : Song? = null
 
     private val played = Stack<Song>()
-    private val upNext = Stack<Song>()
+    private val upNext: Queue<Song> = LinkedList()
 
     var state : PlayerState = PlayerState.STOPPED
 
-    val binder = SoundBinder()
+    private val binder = SoundBinder()
+
+    // Prevents playback if we're testing (i.e. queue)
+    var TEST_MODE = false
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d(TAG, "Service has been started!")
@@ -92,6 +94,9 @@ class SoundService : Service() {
     // Song loading methods
     //
     private fun loadFromFile(path: String) : Boolean {
+        if(TEST_MODE)
+            return true
+
         return try {
             player.reset()
             player.setDataSource(path)
@@ -111,7 +116,12 @@ class SoundService : Service() {
     }
 
     fun addToQueue(song: Song) {
-        upNext.push(song)
+
+        if(this.song == null)
+            this.song = song
+        else {
+            upNext.add(song)
+        }
     }
 
     //
@@ -129,7 +139,7 @@ class SoundService : Service() {
 
     fun play() {
         // attempting to play null will result in disaster
-        if(!player.isPlaying && song != null) {
+        if(!player.isPlaying && song != null && !TEST_MODE) {
             Log.d(TAG, "Playing song ${song}")
             player.start()
             state = PlayerState.PLAYING
@@ -144,12 +154,12 @@ class SoundService : Service() {
     }
 
     fun next() {
-        if(upNext.empty()) {
+        if(upNext.isEmpty()) {
             Log.d(TAG, "Tried to skip fwd when no song exists, returning...")
             return
         }
 
-        val next = upNext.pop()
+        val next = upNext.poll()
 
         played.push(song)
 
@@ -166,7 +176,7 @@ class SoundService : Service() {
         val next = played.pop()
 
         // add to queue
-        upNext.push(song)
+        upNext.add(song)
 
         loadSong(next)
     }
@@ -185,13 +195,12 @@ class SoundService : Service() {
     private val NOTIF_ID = 133742
 
     private fun makeNotification() : Notification {
-        val notification = NotificationCompat.Builder(this, "HendrixChannelID")
+        return NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.logo)
             .setContentTitle("Hendrix is ${state.sentenceString}")
             .setContentText("${song?.artist} - ${song?.title} ${getCurrentTimestamp()} / ${getDurationTimestamp()}")
             .setOnlyAlertOnce(true)
             .build()
-        return notification
     }
 
     fun hideNotification() {
@@ -220,5 +229,13 @@ class SoundService : Service() {
 
         val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         nm.createNotificationChannel(channel)
+    }
+
+    //
+    // Debug / Test stuffs
+    //
+
+    fun strStats() : String {
+        return "Current: ${song?.title}, History: ${played.size}, Queue: ${upNext.size}"
     }
 }
