@@ -26,6 +26,8 @@ class Song : Serializable{
     var duration : Int = 0
 
 
+    val timestamp get() = millisToTimestamp(duration)
+
 //    var artwork : Bitmap? = null
 
     constructor() {
@@ -58,7 +60,7 @@ class Song : Serializable{
     override fun toString(): String {
         // The Weeknd - Starboy 03:15 HipHop
 
-        return "$artist - $title \n Duration (ms): $duration\n Path: $path\n$"
+        return "$artist - $title ${millisToTimestamp(duration)} \n$"
     }
 
 

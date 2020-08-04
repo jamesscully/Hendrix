@@ -81,7 +81,6 @@ class PlayActivity : AppCompatActivity() {
         fixedRateTimer("updateprog", true, 0, 1000) {
             this@PlayActivity.runOnUiThread {
 
-                // return if we're not bound
                 if(!bound)
                     return@runOnUiThread
 
@@ -145,7 +144,6 @@ class PlayActivity : AppCompatActivity() {
                 }
 
                 service.play()
-
                 service.showNotification()
             }
 
@@ -174,15 +172,15 @@ class PlayActivity : AppCompatActivity() {
     fun updateUI() {
         val s = model.song
 
-        model.songinfoText.value = "${s.artist} - ${s.title}"
+        model.songinfoText.value = "${s.artist} / ${s.title}"
 
-        if(bound)
+        if(bound && service.song == model.song)
             setTimeLeft(service.getPosition())
 
         if(model.playbar.finishedMoving && bound) {
             service.seekTo(model.playbar.millisFromCursor())
-            model.playbar.finishedMoving = false
             service.play()
+            model.playbar.finishedMoving = false
         }
 
         model.playbar.invalidate()
