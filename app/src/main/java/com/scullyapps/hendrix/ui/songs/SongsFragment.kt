@@ -39,7 +39,7 @@ class SongsFragment : Fragment() {
         }
 
         // on click
-        val adapter = SongsRAdapter() {song ->
+        val adapter = SongsRAdapter {song ->
             intent.putExtra("song", song)
             startActivity(intent)
         }
@@ -58,7 +58,8 @@ class SongsFragment : Fragment() {
 
         LocalBroadcastManager.getInstance(root.context).registerReceiver(updateUI, IntentFilter("receive-songs"))
 
-        Intent(root.context, DiscoverMusic::class.java).also { intent ->
+        Intent(root.context, DiscoverMusic::class.java).also {intent ->
+            intent.putExtra("searchtype", DiscoverMusic.SearchType.ARTISTS)
             activity?.startService(intent)
         }
 

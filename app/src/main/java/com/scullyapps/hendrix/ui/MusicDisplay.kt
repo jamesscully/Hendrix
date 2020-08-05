@@ -13,8 +13,6 @@ class MusicDisplay(context: Context, title : String) : FrameLayout(context)  {
         ALBUM, SONG, ARTIST
     }
 
-
-
     init {
         LayoutInflater.from(context).inflate(R.layout.widget_musicdisplay, this, true)
 

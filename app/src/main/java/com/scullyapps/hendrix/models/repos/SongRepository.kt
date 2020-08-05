@@ -28,14 +28,6 @@ object SongRepository {
             Log.d(TAG, "Could not get external storage permissions!")
         }
 
-        File(Environment.getExternalStorageDirectory(), "Music").walkTopDown()
-            .filter {
-                // ensure we're only reading files with audio extensions
-                    file -> Song.isValidAudioExt(file.extension) && file.isFile
-            }
-            .forEach {
-                //songs.add(Song(it))
-            }
     }
 
 
