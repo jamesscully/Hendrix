@@ -19,7 +19,7 @@
         app:srcCompat="@drawable/ic_unknown_art" />
 
     <TextView
-        android:id="@+id/sd_song_name"
+        android:id="@+id/sd_song_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"

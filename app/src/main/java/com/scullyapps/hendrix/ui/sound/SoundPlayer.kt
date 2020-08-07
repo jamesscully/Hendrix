@@ -5,7 +5,6 @@ import android.media.MediaPlayer
 import android.util.Log
 import com.scullyapps.hendrix.models.song.Song
 import kotlinx.io.IOException
-import java.lang.IllegalArgumentException
 import java.util.*
 
 enum class PlayerState {

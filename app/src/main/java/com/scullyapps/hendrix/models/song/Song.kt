@@ -26,6 +26,8 @@ class Song : Serializable{
     var duration : Int = 0
 
 
+    val timestamp get() = millisToTimestamp(duration)
+
 //    var artwork : Bitmap? = null
 
     constructor() {
@@ -58,7 +60,7 @@ class Song : Serializable{
     override fun toString(): String {
         // The Weeknd - Starboy 03:15 HipHop
 
-        return "$artist - $title \n Duration (ms): $duration\n Path: $path\n$"
+        return "$artist - $title ${millisToTimestamp(duration)} \n$"
     }
 
 
@@ -71,14 +73,18 @@ class Song : Serializable{
         return md5 == calculateMD5()
     }
 
-    // "static" methods
+    override fun equals(other: Any?): Boolean {
+        if(other !is Song)
+            return false
 
+        return this.path == other.path
+    }
+
+    // "static" methods
     companion object {
         fun isValidAudioExt(fileExt: String): Boolean {
-
             val acceptedFileTypes: Array<String> = arrayOf("mp3", "m4a")
             return acceptedFileTypes.contains(fileExt)
-
         }
 
         // takes in duration as milliseconds, returns timestamp i.e. 13:37 / 1:13:37

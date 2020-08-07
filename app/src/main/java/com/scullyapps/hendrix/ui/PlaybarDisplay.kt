@@ -1,14 +1,15 @@
 package com.scullyapps.hendrix.ui
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Rect
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.core.math.MathUtils
 import com.scullyapps.hendrix.models.song.Bookmark
-import com.scullyapps.hendrix.ui.sound.SoundPlayer
 
 class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr) {
     private val TAG: String = "PlaybarDisplay";
@@ -22,9 +23,9 @@ class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr
     val cursor = Cursor()
 
     // current time on song
-    var time : Int = 1
+    var time : Int = 0
     // duration of song
-    var duration : Int = 1
+    var duration : Int = 0
 
     // gives percentage of way through with up/low bounds
     var progress : Float = 0.0f
@@ -129,6 +130,10 @@ class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr
 
     override fun onDraw(canvas: Canvas?) {
 
+        if(finishedMoving) {
+            return
+        }
+
         // draw background
         canvas?.drawRect(0F, 0F, width.toFloat(), height.toFloat(), backgroundPaint)
 
@@ -173,7 +178,6 @@ class PlaybarDisplay(context : Context, attr: AttributeSet) : View(context, attr
 
             // switchout x depending on if we're grabbed
             val x : Float = if (isGrabbed) movedX else this.x
-            Log.d(TAG, "Drawing, grabbed ($isGrabbed) at $x")
 
             canvas?.drawCircle(x, height.toFloat() / 2, 20F, cursorBackgroundPaint)
             canvas?.drawRect(x - w, height.toFloat() / 2, x + w, height.toFloat(), cursorBackgroundPaint)

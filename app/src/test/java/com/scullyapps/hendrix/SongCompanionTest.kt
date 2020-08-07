@@ -1,16 +1,11 @@
 package com.scullyapps.hendrix
 
 import com.scullyapps.hendrix.models.song.Song
+import org.junit.Assert.*
 import org.junit.Test
 
-import org.junit.Assert.*
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
-class ExampleUnitTest {
+class SongCompanionTest {
 
     //         x y  z
     // convert 1:30:15 to millis
@@ -31,4 +26,15 @@ class ExampleUnitTest {
         assertEquals("00:00", Song.millisToTimestamp(0))
     }
 
+    @Test
+    fun validAudioExtTest() {
+        assertTrue(Song.isValidAudioExt("mp3"))
+        assertTrue(Song.isValidAudioExt("m4a"))
+
+        assertFalse(Song.isValidAudioExt("wav"))
+        assertFalse(Song.isValidAudioExt("mp4"))
+        assertFalse(Song.isValidAudioExt("mpeg"))
+        assertFalse(Song.isValidAudioExt("raw"))
+        assertFalse(Song.isValidAudioExt("flac"))
+    }
 }

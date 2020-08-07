@@ -23,7 +23,8 @@ class ArtistFragment : Fragment() {
             ViewModelProviders.of(this).get(ArtistViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_artists, container, false)
         val textView: TextView = root.findViewById(R.id.text_gallery)
-        artistViewModel.text.observe(this, Observer {
+
+        artistViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
         return root
